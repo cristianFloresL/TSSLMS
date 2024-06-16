@@ -1,0 +1,50 @@
+#ventanaForm {
+    margin: 0 auto;
+    text-align: center;
+    background-color: #f0f0fc;
+  }
+  .english-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; 
+  }
+  .list-container {
+    display: flex;
+    justify-content: center;
+    min-height: 100vh; 
+    background-color: #f0f0fc;
+  }
+  
+  .english-box {
+    max-width: 500px; 
+    width: 200%; 
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(18, 16, 16, 0.395); 
+    color: #000000;
+    background-color: white;
+    background-image: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/1462889/pat.svg');
+    border-radius: 8px;
+  }
+  @media (max-width: 1868px) {
+    .list-container {
+      padding-left: 230px;
+  }
+  }
+  @media (max-width: 1068px) {
+    .english-box {
+      margin-left: 200px;
+    }
+  }
+  @media (max-width: 668px) {
+    .english-container {
+        padding: 0; 
+    }
+    .english-box {
+        max-width: none; 
+        margin-left: 0px;
+    }
+    .list-container {
+      padding-left: 0px;
+    }
+  }

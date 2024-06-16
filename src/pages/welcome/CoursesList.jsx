@@ -1,0 +1,107 @@
+import React, { useEffect, useState } from 'react';
+import { firestore } from '../../connection/firebaseConfig';
+import { collection, getDocs } from 'firebase/firestore';
+import { useNavigate } from 'react-router-dom';
+import { Card, CardMedia, CardContent, Typography, Grid, Box } from '@mui/material';
+import { styled } from '@mui/system';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#1976d2',
+    },
+  },
+});
+
+const StyledCard = styled(Card)({
+  maxWidth: 345,
+  margin: '1rem',
+  position: 'relative',
+  cursor: 'pointer',
+  transition: 'transform 0.3s ease',
+  '&:hover': {
+    transform: 'scale(1.05)',
+    boxShadow: '0 0 10px rgba(0, 0, 0, 0.2)',
+  },
+});
+
+const StyledCardMedia = styled(CardMedia)({
+  height: 140,
+});
+
+const LevelBadge = styled('div')(({ theme }) => ({
+  position: 'absolute',
+  top: '10px',
+  right: '10px',
+  backgroundColor: theme.palette.primary.main,
+  color: 'white',
+  padding: '0.5rem',
+  borderRadius: '5px',
+}));
+
+const CoursesList = () => {
+  const [courses, setCourses] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      const coursesCollection = collection(firestore, 'clases');
+      const coursesSnapshot = await getDocs(coursesCollection);
+      const coursesList = coursesSnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setCourses(coursesList);
+    };
+
+    fetchCourses();
+  }, []);
+
+  const handleCardClick = (courseId) => {
+    navigate(`/User/course/${courseId}`);
+  };
+
+  const getLevelLabel = (level) => {
+    switch(level) {
+      case 'Principiante': return 'A';
+      case 'Intermedio': return 'B';
+      case 'Avanzado': return 'C';
+      default: return '';
+    }
+  };
+
+  return (
+    <ThemeProvider theme={theme}>
+      <Box mt={3} mx="auto" maxWidth={1200} px={3}>
+        <Box py={2} mb={3} bgcolor="#f0f0f0" borderRadius={5} textAlign="center">
+          <Typography variant="h4" gutterBottom style={{ color: '#1f2029' , fontWeight:'bold', marginTop:'7px'}}>
+            Cursos Disponibles
+          </Typography>
+        </Box>
+        <Grid container spacing={3}>
+          {courses.map((course) => (
+            <Grid item xs={12} sm={6} md={4} key={course.id}>
+              <StyledCard onClick={() => handleCardClick(course.id)}>
+                <StyledCardMedia
+                  image={course.imageUrl || 'default-image-url'}
+                  title={course.courseName}
+                />
+                <CardContent>
+                  <Typography gutterBottom variant="h5" component="div">
+                    {course.courseName}
+                  </Typography>
+                </CardContent>
+                <LevelBadge>
+                  {getLevelLabel(course.englishLevel)}
+                </LevelBadge>
+              </StyledCard>
+            </Grid>
+          ))}
+        </Grid>
+      </Box>
+    </ThemeProvider>
+  );
+};
+
+export default CoursesList;
