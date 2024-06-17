@@ -2,11 +2,11 @@ import React, { useState, useContext, useRef, useEffect} from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import styles from "./Navbar.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHome, faSearch, faUser, faGraduationCap } from "@fortawesome/free-solid-svg-icons";
+import { faHome, faSearch, faUser, faGraduationCap, faFileCode } from "@fortawesome/free-solid-svg-icons";
 import logo from "../../assets/ELEVA.png";
 import { UserContext } from '../../context/UserContext';
 import { FiLogOut } from 'react-icons/fi';
-
+ 
 const Navbar = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [menuOpen, setMenuOpen] = useState(false);
@@ -67,6 +67,15 @@ const Navbar = () => {
             >
               <span className={styles.label}>Mis Cursos</span>
               <FontAwesomeIcon icon={faGraduationCap} />
+            </NavLink>
+            <NavLink
+              className={({ isActive }) =>
+                `${isActive && styles.active} ${styles.nav__item}`
+              }
+              to="/User/PrueCod"
+            >
+              <span className={styles.label}>Probando Codigo</span>
+              <FontAwesomeIcon icon={faFileCode} />
             </NavLink>
             <NavLink
               className={({ isActive }) =>
