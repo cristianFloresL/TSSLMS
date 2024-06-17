@@ -27,10 +27,9 @@ import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 const ViewCourse = () => {
   const { courseId } = useParams();
   const [course, setCourse] = useState({});
-  const [modules, setModules] = useState([]);
-  const [selectedModule, setSelectedModule] = useState(null);
+  const [themes, setThemes] = useState([]);
   const [selectedResource, setSelectedResource] = useState(null);
-  const [openModules, setOpenModules] = useState([false, false, false, false]); // Ocultar los módulos por defecto
+  const [openThemes, setOpenThemes] = useState([false, false, false, false, false]); // Ocultar los temas por defecto
   const [loading, setLoading] = useState(true); // Estado de carga
   const defaultLayoutPluginInstance = defaultLayoutPlugin();
 
@@ -46,43 +45,33 @@ const ViewCourse = () => {
       }
     };
 
-    const fetchModules = async () => {
-      const updatedModules = [];
-      for (let i = 0; i < 4; i++) {
-        const moduleRef = collection(firestore, `clases/${courseId}/modulo${i + 1}`);
-        const moduleSnapshot = await getDocs(moduleRef);
-        const moduleData = [];
+    const fetchThemes = async () => {
+      const updatedThemes = [];
+      for (let i = 0; i < 5; i++) {
+        const themeRef = collection(firestore, `clases/${courseId}/tema${i + 1}`);
+        const themeSnapshot = await getDocs(themeRef);
+        const themeData = [];
 
-        for (const doc of moduleSnapshot.docs) {
-          if (doc.id !== 'quiz') {
-            const data = doc.data();
-            moduleData.push({ id: doc.id, ...data });
-          }
+        for (const doc of themeSnapshot.docs) {
+          const data = doc.data();
+          themeData.push({ id: doc.id, ...data });
         }
 
-        const quizRef = doc(moduleRef, 'quiz');
-        const quizSnapshot = await getDoc(quizRef);
-        const quizData = quizSnapshot.exists() ? quizSnapshot.data() : null;
-
-        updatedModules.push({ resources: moduleData, quiz: quizData });
+        updatedThemes.push({ resources: themeData });
       }
 
-      setModules(updatedModules);
+      setThemes(updatedThemes);
       setLoading(false); // Finalizar la carga
     };
 
     fetchCourse();
-    fetchModules();
+    fetchThemes();
   }, [courseId]);
 
-  const handleModuleClick = (index) => {
-    const updatedOpenModules = [...openModules];
-    updatedOpenModules[index] = !updatedOpenModules[index];
-    setOpenModules(updatedOpenModules);
-    // Eliminar la selección del módulo para que no afecte la visualización del recurso seleccionado
-    if (selectedModule === index) {
-      setSelectedModule(null);
-    }
+  const handleThemeClick = (index) => {
+    const updatedOpenThemes = [...openThemes];
+    updatedOpenThemes[index] = !updatedOpenThemes[index];
+    setOpenThemes(updatedOpenThemes);
   };
 
   const handleResourceClick = (resource) => {
@@ -100,7 +89,7 @@ const ViewCourse = () => {
             width: 240,
             boxSizing: 'border-box',
             height: 'calc(100vh - 100px)',
-            position: 'relative', 
+            position: 'relative',
             zIndex: '2',
           },
         }}
@@ -111,22 +100,22 @@ const ViewCourse = () => {
               <CircularProgress />
             </Box>
           ) : (
-            modules.map((module, index) => (
+            themes.map((theme, index) => (
               <div key={index}>
-                <ListItem button onClick={() => handleModuleClick(index)}>
-                  <ListItemIcon >
+                <ListItem button onClick={() => handleThemeClick(index)}>
+                  <ListItemIcon>
                     <MenuBookIcon sx={{ fontSize: '2rem' }} />
                   </ListItemIcon>
-                  <ListItemText primary={`Módulo ${index + 1}`} />
+                  <ListItemText primary={`Tema ${index + 1}`} />
                 </ListItem>
                 <Divider />
-                <Collapse in={openModules[index]}>
-                  {module.resources.length === 0 ? (
+                <Collapse in={openThemes[index]}>
+                  {theme.resources.length === 0 ? (
                     <ListItem>
-                      <ListItemText primary="No hay recursos en este módulo" />
+                      <ListItemText primary="No hay recursos en este tema" />
                     </ListItem>
                   ) : (
-                    module.resources.sort((a, b) => a.position - b.position).map((resource) => (
+                    theme.resources.map((resource) => (
                       <ListItem
                         button
                         key={resource.id}

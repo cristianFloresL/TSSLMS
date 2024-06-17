@@ -54,7 +54,7 @@ const Sidebar = () => {
           <Link to="/">Inicio</Link>
         </li>
         <li>
-          <Link to="/Admin/crear-curso">Crear Curso</Link>
+          <Link to="/Admin/crear-curso">Crear Grupo</Link>
         </li>
         <li>
           <Link to="/Admin/recursos-curso">Recursos de un Curso</Link>

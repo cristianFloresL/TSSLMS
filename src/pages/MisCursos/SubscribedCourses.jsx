@@ -32,7 +32,7 @@ const StyledCardMedia = styled(CardMedia)({
   height: 140,
 });
 
-const LevelBadge = styled('div')(({ theme }) => ({
+const GroupBadge = styled('div')(({ theme }) => ({
   position: 'absolute',
   top: '10px',
   right: '10px',
@@ -43,13 +43,13 @@ const LevelBadge = styled('div')(({ theme }) => ({
 }));
 
 const SubscribedCourses = () => {
-  const [userCourses, setUserCourses] = useState([]);
+  const [userGroups, setUserGroups] = useState([]);
   const [loading, setLoading] = useState(true);
   const { currentUser } = useContext(UserContext);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchUserCourses = async () => {
+    const fetchUserGroups = async () => {
       setLoading(true); // Comienza el estado de carga
 
       if (currentUser && currentUser !== 'invitado') {
@@ -58,14 +58,14 @@ const SubscribedCourses = () => {
         if (userDoc.exists()) {
           const userData = userDoc.data();
           if (userData.courses) {
-            // Obtener los detalles de los cursos desde la colección 'clases'
-            const coursesDetails = await Promise.all(userData.courses.map(async course => {
-              const courseDoc = await getDoc(doc(firestore, 'clases', course.courseId));
-              return courseDoc.exists() ? { id: course.courseId, ...courseDoc.data() } : null;
+            // Obtener los detalles de los grupos desde la colección 'groups'
+            const groupsDetails = await Promise.all(userData.courses.map(async course => {
+              const groupDoc = await getDoc(doc(firestore, 'groups', course.courseId));
+              return groupDoc.exists() ? { id: course.courseId, ...groupDoc.data() } : null;
             }));
-            // Filtrar cursos que existen
-            const filteredCourses = coursesDetails.filter(course => course !== null);
-            setUserCourses(filteredCourses);
+            // Filtrar grupos que existen
+            const filteredGroups = groupsDetails.filter(group => group !== null);
+            setUserGroups(filteredGroups);
           }
         }
       }
@@ -73,20 +73,11 @@ const SubscribedCourses = () => {
       setLoading(false); // Finaliza el estado de carga
     };
 
-    fetchUserCourses();
+    fetchUserGroups();
   }, [currentUser]);
 
-  const handleCardClick = (courseId) => {
-    navigate(`/User/viewcourse/${courseId}`);
-  };
-
-  const getLevelLabel = (level) => {
-    switch(level) {
-      case 'Principiante': return 'A';
-      case 'Intermedio': return 'B';
-      case 'Avanzado': return 'C';
-      default: return '';
-    }
+  const handleCardClick = (groupId) => {
+    navigate(`/User/viewcourse/PmsGWJ2NCt9yb8OenzBu`);
   };
 
   return (
@@ -96,29 +87,29 @@ const SubscribedCourses = () => {
           <Box py={2} mb={3} textAlign="center">
             <CircularProgress /> {/* Indicador de carga */}
           </Box>
-        ) : userCourses.length > 0 ? (
+        ) : userGroups.length > 0 ? (
           <React.Fragment>
             <Box py={2} mb={3} bgcolor="#f0f0f0" borderRadius={5} textAlign="center">
               <Typography variant="h4" gutterBottom style={{ color: '#1f2029', fontWeight: 'bold', marginTop: '7px' }}>
-                Cursos en los que te has inscrito
+                Grupos en los que te has inscrito
               </Typography>
             </Box>
             <Grid container spacing={3}>
-              {userCourses.map((course) => (
-                <Grid item xs={12} sm={6} md={4} key={course.id}>
-                  <StyledCard onClick={() => handleCardClick(course.id)}>
+              {userGroups.map((group) => (
+                <Grid item xs={12} sm={6} md={4} key={group.id}>
+                  <StyledCard onClick={() => handleCardClick(group.id)}>
                     <StyledCardMedia
-                      image={course.imageUrl || 'default-image-url'}
-                      title={course.courseName}
+                      image={group.imageUrl || 'default-image-url'}
+                      title={group.groupName}
                     />
                     <CardContent>
                       <Typography gutterBottom variant="h5" component="div">
-                        {course.courseName}
+                        {group.groupName}
                       </Typography>
                     </CardContent>
-                    <LevelBadge>
-                      {getLevelLabel(course.englishLevel)}
-                    </LevelBadge>
+                    <GroupBadge>
+                      {group.groupCode}
+                    </GroupBadge>
                   </StyledCard>
                 </Grid>
               ))}
@@ -127,7 +118,7 @@ const SubscribedCourses = () => {
         ) : (
           <Box py={2} mb={3} textAlign="center">
             <Typography variant="h4" gutterBottom style={{ color: '#1f2029', fontWeight: 'bold', marginTop: '7px' }}>
-              No estás suscrito a ningún curso
+              No estás suscrito a ningún grupo
             </Typography>
             <FaRegFrown style={{ fontSize: '3rem', color: '#1976d2', marginTop: '1rem' }} />
           </Box>

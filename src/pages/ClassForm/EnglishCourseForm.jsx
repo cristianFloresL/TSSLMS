@@ -1,23 +1,23 @@
 import React, { useState } from 'react';
-import { TextField, Button, MenuItem, FormControl, InputLabel, Select, Grid, Avatar, Box } from '@mui/material';
+import { TextField, Button, Grid, Avatar } from '@mui/material';
 import { collection, doc, setDoc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { firestore, storage  } from '../../connection/firebaseConfig';
+import { firestore, storage } from '../../connection/firebaseConfig';
 import "./EnglishForm.css";
 
 const EnglishCourseForm = () => {
-  const [courseImage, setCourseImage] = useState(null);
+  const [groupImage, setGroupImage] = useState(null);
   const [imageFile, setImageFile] = useState(null);
-  const [englishLevel, setEnglishLevel] = useState('Principiante');
-  const [courseName, setCourseName] = useState('');
-  const [courseDescription, setCourseDescription] = useState('');
+  const [groupName, setGroupName] = useState('');
+  const [groupDescription, setGroupDescription] = useState('');
+  const [groupCode, setGroupCode] = useState('');
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setCourseImage(reader.result);
+        setGroupImage(reader.result);
       };
       reader.readAsDataURL(file);
       setImageFile(file);
@@ -28,34 +28,34 @@ const EnglishCourseForm = () => {
     event.preventDefault();
     const db = firestore;
     const stor = storage;
-    const newCourseRef = doc(collection(db, "clases"));
-    const courseId = newCourseRef.id;
-    
+    const newGroupRef = doc(collection(db, "groups"));
+    const groupId = newGroupRef.id;
+
     try {
       let imageUrl = '';
       
       if (imageFile) {
-        const storageRef = ref(stor, `courses/${courseId}/images/${imageFile.name}`);
+        const storageRef = ref(stor, `groups/${groupId}/images/${imageFile.name}`);
         await uploadBytes(storageRef, imageFile);
         imageUrl = await getDownloadURL(storageRef);
       }
-      await setDoc(newCourseRef, {
-        courseName,
-        courseDescription,
-        englishLevel,
+      await setDoc(newGroupRef, {
+        groupName,
+        groupDescription,
+        groupCode,
         imageUrl,
       });
 
-      setCourseName('');
-      setCourseDescription('');
-      setEnglishLevel('Principiante');
-      setCourseImage(null);
+      setGroupName('');
+      setGroupDescription('');
+      setGroupCode('');
+      setGroupImage(null);
       setImageFile(null);
-      alert('Curso creado exitosamente');
+      alert('Grupo creado exitosamente');
 
     } catch (error) {
-      console.error("Error creando el curso: ", error);
-      alert('Hubo un error creando el curso');
+      console.error("Error creando el grupo: ", error);
+      alert('Hubo un error creando el grupo');
     }
   };
 
@@ -69,60 +69,55 @@ const EnglishCourseForm = () => {
           <TextField
             variant="outlined"
             fullWidth
-            label="Nombre del Curso"
-            name="courseName"
-            value={courseName}
-            onChange={e => setCourseName(e.target.value)}
+            label="Nombre del Grupo"
+            name="groupName"
+            value={groupName}
+            onChange={e => setGroupName(e.target.value)}
           />
         </Grid>
         <Grid item xs={12}>
           <TextField
             variant="outlined"
             fullWidth
-            label="Descripción del Curso"
-            name="courseDescription"
+            label="Descripción del Grupo"
+            name="groupDescription"
             multiline
             rows={4}
-            value={courseDescription}
-            onChange={e => setCourseDescription(e.target.value)}
+            value={groupDescription}
+            onChange={e => setGroupDescription(e.target.value)}
           />
         </Grid>
         <Grid item xs={12}>
-          <FormControl variant="outlined" sx={{ minWidth: '100%' , textAlign:'left'}}>
-            <InputLabel id="level-select-label">Nivel de Inglés</InputLabel>
-            <Select
-                labelId="level-select-label"
-                label="Nivel de Inglés"
-                name="englishLevel"
-                value={englishLevel}
-                onChange={event => setEnglishLevel(event.target.value)}
-                >
-                <MenuItem value="Principiante">Principiante</MenuItem>
-                <MenuItem value="Intermedio">Intermedio</MenuItem>
-                <MenuItem value="Avanzado">Avanzado</MenuItem>
-            </Select>
-          </FormControl>
+          <TextField
+            variant="outlined"
+            fullWidth
+            label="Grupo"
+            name="groupCode"
+            inputProps={{ maxLength: 3 }}
+            value={groupCode}
+            onChange={e => setGroupCode(e.target.value)}
+          />
         </Grid>
         <Grid item xs={12}>
           <input
             accept="image/*"
-            id="course-image-input"
+            id="group-image-input"
             type="file"
             onChange={handleImageChange}
             style={{ display: 'none' }}
           />
-          <label htmlFor="course-image-input">
+          <label htmlFor="group-image-input">
             <Button variant="outlined" component="span">
-              Seleccionar Imagen del Curso
+              Seleccionar Imagen del Grupo
             </Button>
           </label>
-          {courseImage && (
-            <Avatar alt="Course Image" src={courseImage} sx={{ width: 150, height: 150, margin: 'auto', marginTop: '10px'}} />
+          {groupImage && (
+            <Avatar alt="Group Image" src={groupImage} sx={{ width: 150, height: 150, margin: 'auto', marginTop: '10px'}} />
           )}
         </Grid>
         <Grid item xs={12}>
             <Button variant="contained" color="primary" fullWidth type="submit">
-              Crear Curso
+              Lanzar Grupo
             </Button>
         </Grid>
       </Grid>

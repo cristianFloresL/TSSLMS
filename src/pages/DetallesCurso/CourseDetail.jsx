@@ -14,7 +14,7 @@ const CourseDetail = () => {
 
   useEffect(() => {
     const fetchCourse = async () => {
-      const courseDoc = doc(firestore, 'clases', courseId);
+      const courseDoc = doc(firestore, 'groups', courseId);
       const courseSnapshot = await getDoc(courseDoc);
       if (courseSnapshot.exists()) {
         setCourse(courseSnapshot.data());
@@ -97,15 +97,15 @@ const CourseDetail = () => {
       <CardMedia
         component="img"
         image={course.imageUrl || 'default-image-url'}
-        alt={course.courseName}
+        alt={course.groupName}
         style={{ height: '300px', marginBottom: '1rem' }}
       />
       <Box display="flex" alignItems="center" justifyContent="space-between">
         <Typography variant="h3" gutterBottom style={{ color: '#1f2029', fontWeight: 'bold' }}>
-          {course.courseName}
+          {course.groupName}
         </Typography>
         <Chip
-          label={`Nivel: ${course.englishLevel}`}
+          label={`Grupo: ${course.groupCode}`}
           color="primary"
           variant="outlined"
           sx={{ marginLeft: '1rem', marginBottom: '1.5rem' }}
@@ -122,7 +122,7 @@ const CourseDetail = () => {
           backgroundColor: '#f9f9f9'
         }}
       >
-        <Typography variant="h6" gutterBottom>{course.courseDescription}</Typography>
+        <Typography variant="h6" gutterBottom>{course.groupDescription}</Typography>
       </Box>
       {isSubscribed ? (
         <Button 
@@ -150,7 +150,7 @@ const CourseDetail = () => {
           }} 
           onClick={handleSubscribe}
         >
-          Suscribirse al curso
+          Suscribirse al grupo
         </Button>
       )}
       <Snackbar

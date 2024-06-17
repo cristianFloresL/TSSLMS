@@ -13,8 +13,8 @@ const EditCourse = () => {
   const { courseId } = useParams();
   const [course, setCourse] = useState({});
   const [isEditing, setIsEditing] = useState(false);
-  const [modules, setModules] = useState([[], [], [], []]); // 4 modules initially empty
-  const [existingFiles, setExistingFiles] = useState([[], [], [], []]); // 4 modules for existing files
+  const [topics, setTopics] = useState([[], [], [], [], []]); // 5 topics initially empty
+  const [existingFiles, setExistingFiles] = useState([[], [], [], [], []]); // 5 topics for existing files
   const [openDialog, setOpenDialog] = useState(false);
   const [fileToDelete, setFileToDelete] = useState(null);
   const fileInputs = useRef([]);
@@ -40,18 +40,18 @@ const EditCourse = () => {
     };
 
     const fetchExistingFiles = async () => {
-      const updatedExistingFiles = [[], [], [], []];
-      for (let i = 0; i < 4; i++) {
-        const moduleRef = collection(firestore, `clases/${courseId}/modulo${i + 1}`);
-        const moduleSnapshot = await getDocs(moduleRef);
-        const moduleFiles = [];
+      const updatedExistingFiles = [[], [], [], [], []];
+      for (let i = 0; i < 5; i++) {
+        const topicRef = collection(firestore, `clases/${courseId}/tema${i + 1}`);
+        const topicSnapshot = await getDocs(topicRef);
+        const topicFiles = [];
 
-        for (const doc of moduleSnapshot.docs) {
+        for (const doc of topicSnapshot.docs) {
           const fileData = doc.data();
-          moduleFiles.push({ id: doc.id, ...fileData });
+          topicFiles.push({ id: doc.id, ...fileData });
         }
 
-        updatedExistingFiles[i] = moduleFiles;
+        updatedExistingFiles[i] = topicFiles;
       }
       setExistingFiles(updatedExistingFiles);
     };
@@ -69,46 +69,46 @@ const EditCourse = () => {
     setCourse({ ...course, [name]: value });
   };
 
-  const handleFileChange = (e, moduleIndex) => {
+  const handleFileChange = (e, topicIndex) => {
     const files = Array.from(e.target.files);
-    const updatedModules = [...modules];
-    updatedModules[moduleIndex] = [...updatedModules[moduleIndex], ...files];
-    setModules(updatedModules);
+    const updatedTopics = [...topics];
+    updatedTopics[topicIndex] = [...updatedTopics[topicIndex], ...files];
+    setTopics(updatedTopics);
   };
 
-  const handleRemoveFile = (moduleIndex, fileIndex) => {
-    const updatedModules = [...modules];
-    updatedModules[moduleIndex] = updatedModules[moduleIndex].filter((_, index) => index !== fileIndex);
-    setModules(updatedModules);
+  const handleRemoveFile = (topicIndex, fileIndex) => {
+    const updatedTopics = [...topics];
+    updatedTopics[topicIndex] = updatedTopics[topicIndex].filter((_, index) => index !== fileIndex);
+    setTopics(updatedTopics);
 
     // Reset file input value
-    if (fileInputs.current[moduleIndex]) {
-      fileInputs.current[moduleIndex].value = "";
+    if (fileInputs.current[topicIndex]) {
+      fileInputs.current[topicIndex].value = "";
     }
   };
 
-  const handleDeleteExistingFile = (moduleIndex, file) => {
-    setFileToDelete({ moduleIndex, file });
+  const handleDeleteExistingFile = (topicIndex, file) => {
+    setFileToDelete({ topicIndex, file });
     setOpenDialog(true);
   };
 
   const confirmDeleteFile = async () => {
     if (!fileToDelete) return;
 
-    const { moduleIndex, file } = fileToDelete;
+    const { topicIndex, file } = fileToDelete;
 
     try {
       // Delete from Firestore
-      const fileDocRef = doc(firestore, `clases/${courseId}/modulo${moduleIndex + 1}`, file.id);
+      const fileDocRef = doc(firestore, `clases/${courseId}/tema${topicIndex + 1}`, file.id);
       await deleteDoc(fileDocRef);
 
       // Delete from Firebase Storage
-      const fileRef = ref(storage, `courses/${courseId}/modulo${moduleIndex + 1}/${file.name}`);
+      const fileRef = ref(storage, `courses/${courseId}/tema${topicIndex + 1}/${file.name}`);
       await deleteObject(fileRef);
 
       // Update state
       const updatedExistingFiles = [...existingFiles];
-      updatedExistingFiles[moduleIndex] = updatedExistingFiles[moduleIndex].filter(f => f.id !== file.id);
+      updatedExistingFiles[topicIndex] = updatedExistingFiles[topicIndex].filter(f => f.id !== file.id);
       setExistingFiles(updatedExistingFiles);
     } catch (error) {
       console.error("Error deleting file: ", error);
@@ -118,8 +118,8 @@ const EditCourse = () => {
     }
   };
 
-  const handleEditExistingFile = (moduleIndex, file) => {
-    setFileToEdit({ moduleIndex, file });
+  const handleEditExistingFile = (topicIndex, file) => {
+    setFileToEdit({ topicIndex, file });
     setEditData({
       title: file.title || '',
       description: file.description || '',
@@ -136,19 +136,19 @@ const EditCourse = () => {
   const confirmEditFile = async () => {
     if (!fileToEdit) return;
 
-    const { moduleIndex, file } = fileToEdit;
+    const { topicIndex, file } = fileToEdit;
 
     try {
       // Update Firestore document
-      const fileDocRef = doc(firestore, `clases/${courseId}/modulo${moduleIndex + 1}`, file.id);
+      const fileDocRef = doc(firestore, `clases/${courseId}/tema${topicIndex + 1}`, file.id);
       await updateDoc(fileDocRef, editData);
 
       // Update state
       const updatedExistingFiles = [...existingFiles];
-      const fileIndex = updatedExistingFiles[moduleIndex].findIndex(f => f.id === file.id);
+      const fileIndex = updatedExistingFiles[topicIndex].findIndex(f => f.id === file.id);
       if (fileIndex !== -1) {
-        updatedExistingFiles[moduleIndex][fileIndex] = {
-          ...updatedExistingFiles[moduleIndex][fileIndex],
+        updatedExistingFiles[topicIndex][fileIndex] = {
+          ...updatedExistingFiles[topicIndex][fileIndex],
           ...editData
         };
       }
@@ -161,7 +161,7 @@ const EditCourse = () => {
     }
   };
 
-  const renderPreview = (files, moduleIndex, existing = false) => {
+  const renderPreview = (files, topicIndex, existing = false) => {
     return files.map((file, index) => (
       <div key={index} style={{ margin: '10px', display: 'inline-block', position: 'relative' }}>
         {file.type?.includes("video") || file.url?.includes("video") ? <VideoLibraryIcon style={{ fontSize: '50px' }} /> : <PictureAsPdfIcon style={{ fontSize: '50px' }} />}
@@ -174,7 +174,7 @@ const EditCourse = () => {
             padding: 0,
             backgroundColor: 'rgba(255, 255, 255, 0.7)'
           }}
-          onClick={() => existing ? handleDeleteExistingFile(moduleIndex, file) : handleRemoveFile(moduleIndex, index)}
+          onClick={() => existing ? handleDeleteExistingFile(topicIndex, file) : handleRemoveFile(topicIndex, index)}
         >
           <DeleteIcon fontSize="small" />
         </IconButton>
@@ -187,7 +187,7 @@ const EditCourse = () => {
               padding: 0,
               backgroundColor: 'rgba(255, 255, 255, 0.7)'
             }}
-            onClick={() => handleEditExistingFile(moduleIndex, file)}
+            onClick={() => handleEditExistingFile(topicIndex, file)}
           >
             <EditIcon fontSize="small" />
           </IconButton>
@@ -199,36 +199,60 @@ const EditCourse = () => {
   const handleSave = async () => {
     try {
       const docRef = doc(firestore, "clases", courseId);
+
+      // Actualizar los datos principales del curso
       await updateDoc(docRef, {
         courseName: course.courseName,
         courseDescription: course.courseDescription,
         englishLevel: course.englishLevel,
       });
+
+      // Array para almacenar los nombres de las subcolecciones activas
       const subcollectionNames = [];
-      for (let i = 0; i < modules.length; i++) {
-        const moduleFiles = modules[i];
-        if (moduleFiles.length > 0) {
-          const moduleRef = collection(docRef, `modulo${i + 1}`);
-          subcollectionNames.push(`modulo${i + 1}`);
 
-          for (const file of moduleFiles) {
-            const fileRef = ref(storage, `courses/${courseId}/modulo${i + 1}/${file.name}`);
-            await uploadBytes(fileRef, file);
-            const fileURL = await getDownloadURL(fileRef);
+      // Recorrer cada tema para verificar y actualizar su estado en la lista de subcolecciones
+      for (let i = 0; i < topics.length; i++) {
+        const topicFiles = topics[i];
+        const existingFilesInTopic = existingFiles[i]; // Obtener los archivos existentes del tema
 
-            await addDoc(moduleRef, {
-              name: file.name,
-              url: fileURL,
-              type: file.type.includes("video") ? "video" : "pdf",
-            });
+        // Verificar si el tema tiene archivos nuevos o existentes
+        if (topicFiles.length > 0 || existingFilesInTopic.length > 0) {
+          const topicRef = collection(docRef, `tema${i + 1}`);
+
+          // Añadir el tema a la lista de subcolecciones
+          subcollectionNames.push(`tema${i + 1}`);
+          // Manejar archivos nuevos
+          for (const file of topicFiles) {
+            // Verificar si el archivo es nuevo o ya existe en los archivos existentes
+            const fileExists = existingFilesInTopic.some(f => f.name === file.name);
+
+            if (!fileExists) {
+              const fileRef = ref(storage, `courses/${courseId}/tema${i + 1}/${file.name}`);
+              await uploadBytes(fileRef, file);
+              const fileURL = await getDownloadURL(fileRef);
+
+              // Añadir documento a la subcolección del tema
+              await addDoc(topicRef, {
+                name: file.name,
+                url: fileURL,
+                type: file.type.includes("video") ? "video" : "pdf",
+              });
+            }
+          }
+        } else {
+          // Si el tema está vacío, verificar si existe y eliminarlo de la lista de subcolecciones
+          const topicSnapshot = await getDoc(doc(collection(docRef, `tema${i + 1}`)));
+          if (topicSnapshot.exists()) {
+            subcollectionNames.push(`tema${i + 1}`);
           }
         }
       }
-      if (subcollectionNames.length > 0) {
-        await updateDoc(docRef, {
-          subcollections: subcollectionNames,
-        });
-      }
+
+      // Actualizar la lista de subcolecciones en el documento del curso
+      await updateDoc(docRef, {
+        subcollections: subcollectionNames,
+      });
+
       alert("Curso actualizado exitosamente");
     } catch (error) {
       console.error("Error actualizando el curso: ", error);
@@ -278,20 +302,20 @@ const EditCourse = () => {
           </Grid>
           <Grid item xs={12}>
             {isEditing ? (
-            <FormControl variant="outlined" sx={{ minWidth: '100%' , textAlign:'left'}}>
+              <FormControl variant="outlined" sx={{ minWidth: '100%', textAlign: 'left' }}>
                 <InputLabel id="level-select-label">Nivel de Inglés</InputLabel>
                 <Select
-                    labelId="level-select-label"
-                    label="Nivel de Inglés"
-                    name="englishLevel"
-                    value={course.englishLevel}
-                    onChange={handleInputChange}
+                  labelId="level-select-label"
+                  label="Nivel de Inglés"
+                  name="englishLevel"
+                  value={course.englishLevel}
+                  onChange={handleInputChange}
                 >
-                    <MenuItem value="Principiante">Principiante</MenuItem>
-                    <MenuItem value="Intermedio">Intermedio</MenuItem>
-                    <MenuItem value="Avanzado">Avanzado</MenuItem>
+                  <MenuItem value="Principiante">Principiante</MenuItem>
+                  <MenuItem value="Intermedio">Intermedio</MenuItem>
+                  <MenuItem value="Avanzado">Avanzado</MenuItem>
                 </Select>
-            </FormControl>
+              </FormControl>
             ) : (
               <Typography variant="body1">Nivel: {course.englishLevel}</Typography>
             )}
@@ -301,16 +325,16 @@ const EditCourse = () => {
               <img
                 src={course.imageUrl}
                 alt={course.courseName}
-                style={{ borderRadius: '10px', width: '100%', maxWidth: '300px' }}
+                style={{ borderRadius: '10px', width: '100%', maxWidth: '150px' }} // Adjusted image size
               />
             )}
           </Grid>
         </Grid>
       </Paper>
 
-      {[...Array(4)].map((_, index) => (
+      {[...Array(5)].map((_, index) => ( // Changed to 5 topics
         <Paper key={index} style={{ padding: '20px', marginTop: '20px' }}>
-          <Typography variant="h5">Módulo {index + 1}</Typography>
+          <Typography variant="h5">Tema {index + 1}</Typography> {/* Changed to "Tema" */}
           <div>{renderPreview(existingFiles[index], index, true)}</div>
           <input
             id={`course-input-${index}`}
@@ -325,7 +349,7 @@ const EditCourse = () => {
               Selecciona los Recursos
             </Button>
           </label>
-          <div>{renderPreview(modules[index], index)}</div>
+          <div>{renderPreview(topics[index], index)}</div>
         </Paper>
       ))}
 

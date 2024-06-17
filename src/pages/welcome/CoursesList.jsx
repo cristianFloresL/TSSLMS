@@ -30,7 +30,7 @@ const StyledCardMedia = styled(CardMedia)({
   height: 140,
 });
 
-const LevelBadge = styled('div')(({ theme }) => ({
+const GroupBadge = styled('div')(({ theme }) => ({
   position: 'absolute',
   top: '10px',
   right: '10px',
@@ -41,60 +41,51 @@ const LevelBadge = styled('div')(({ theme }) => ({
 }));
 
 const CoursesList = () => {
-  const [courses, setCourses] = useState([]);
+  const [groups, setGroups] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchCourses = async () => {
-      const coursesCollection = collection(firestore, 'clases');
-      const coursesSnapshot = await getDocs(coursesCollection);
-      const coursesList = coursesSnapshot.docs.map(doc => ({
+    const fetchGroups = async () => {
+      const groupsCollection = collection(firestore, 'groups');
+      const groupsSnapshot = await getDocs(groupsCollection);
+      const groupsList = groupsSnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data(),
       }));
-      setCourses(coursesList);
+      setGroups(groupsList);
     };
 
-    fetchCourses();
+    fetchGroups();
   }, []);
 
-  const handleCardClick = (courseId) => {
-    navigate(`/User/course/${courseId}`);
-  };
-
-  const getLevelLabel = (level) => {
-    switch(level) {
-      case 'Principiante': return 'A';
-      case 'Intermedio': return 'B';
-      case 'Avanzado': return 'C';
-      default: return '';
-    }
+  const handleCardClick = (groupId) => {
+    navigate(`/User/course/${groupId}`);
   };
 
   return (
     <ThemeProvider theme={theme}>
       <Box mt={3} mx="auto" maxWidth={1200} px={3}>
         <Box py={2} mb={3} bgcolor="#f0f0f0" borderRadius={5} textAlign="center">
-          <Typography variant="h4" gutterBottom style={{ color: '#1f2029' , fontWeight:'bold', marginTop:'7px'}}>
-            Cursos Disponibles
+          <Typography variant="h4" gutterBottom style={{ color: '#1f2029', fontWeight: 'bold', marginTop: '7px' }}>
+            Grupos Disponibles
           </Typography>
         </Box>
         <Grid container spacing={3}>
-          {courses.map((course) => (
-            <Grid item xs={12} sm={6} md={4} key={course.id}>
-              <StyledCard onClick={() => handleCardClick(course.id)}>
+          {groups.map((group) => (
+            <Grid item xs={12} sm={6} md={4} key={group.id}>
+              <StyledCard onClick={() => handleCardClick(group.id)}>
                 <StyledCardMedia
-                  image={course.imageUrl || 'default-image-url'}
-                  title={course.courseName}
+                  image={group.imageUrl || 'default-image-url'}
+                  title={group.groupName}
                 />
                 <CardContent>
                   <Typography gutterBottom variant="h5" component="div">
-                    {course.courseName}
+                    {group.groupName}
                   </Typography>
                 </CardContent>
-                <LevelBadge>
-                  {getLevelLabel(course.englishLevel)}
-                </LevelBadge>
+                <GroupBadge>
+                  {group.groupCode}
+                </GroupBadge>
               </StyledCard>
             </Grid>
           ))}
