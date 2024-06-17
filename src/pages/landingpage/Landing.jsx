@@ -24,7 +24,7 @@ const Landing = () => {
       <div className="nav-bar">
         <button className="logon">
           <img className="image-1-icon" alt="" src="/image-1@2x.png" />
-          <div className="ovonrueden">ELEVA</div>
+          <div className="ovonrueden">SISMODE</div>
         </button>
         <div className="menu">
           <button className="about">Acerca de</button>
@@ -42,12 +42,13 @@ const Landing = () => {
           <div className="heading-cta">
             <div className="heading-text">
               <div className="find-the-most">
-                Enseñanza de Lenguas Extranjeras de forma Virtual y Accesible
+                Sistema de Aprendizaje y Modelos de Desarrollo
               </div>
               <div className="vestibulum-placerat">
-                Plataforma gratuita para aprender idiomas de forma virtual y
-                personalizada, diseñada para estudiantes de la Universidad San
-                Simón
+              La plataforma de LMS y centro de contenido integral 
+              para la simulación de sistemas, ofreciendo una experiencia 
+              educativa e interactiva, diseñada para los 
+              estudiantes de la Universidad San Simón.
               </div>
             </div>
             <button className="cta-button">

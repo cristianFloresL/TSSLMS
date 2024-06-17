@@ -1,9 +1,9 @@
 .nav {
     height: 100px;
     overflow-x: hidden;
-    background-color: #1f2029;
+    background-color: #1e293b; /* Fondo de la barra de navegación */
   }
-  
+
   .nav__items {
     width: 100%;
     height: 100%;
@@ -13,44 +13,45 @@
     gap: 1rem;
     margin: 0 auto;
   }
-  
+
   .nav__item {
     display: flex;
     gap: 0.5rem;
-    color: white;
+    color: #a8b0ba; /* Color del texto del ítem */
     align-items: center;
     text-decoration: none;
     padding: 0.3rem;
   }
-  
+
   .label {
     display: none;
   }
-  
+
   .active {
-    color: #ffeba7;
+    color: #ffffff; /* Color del ítem activo */
     border-radius: 2rem;
   }
-  
+
   .active .label {
     display: block; 
     opacity: 1; 
   }
-  
+
   .search__input {
     width: 10rem;
     height: 1rem;
     border-radius: 1rem;
-    border: 2px solid #ffeba7;
+    border: 2px solid #a0aec0; /* Borde del input */
     padding: 0.5rem;
-    font-weight:bold;
+    font-weight: bold;
     font-size: 13px;
   }
-  
+
   .search__input:focus {
     outline: none;
-    border: 2px solid #ffeba7;
+    border: 2px solid #a0aec0; /* Borde del input en foco */
   }
+
   .logo {           
     width: 100px;
     height: 70px;
@@ -58,7 +59,7 @@
     right: 30px; 
     top: 20px;
   }
-  
+
   .userInfo {
     min-width: 120px;
     height: 50px;
@@ -67,54 +68,55 @@
     top: 24px;
     border-radius: 1rem;
     cursor: pointer;
-    background-color: #ffeba7;
-    color: #102770;
+    background-color: #a0aec0; /* Fondo del botón de usuario */
+    color: #1e293b; /* Color del texto del botón de usuario */
   }
+
   .userInfo:hover,
   .userInfoActive {
-    background-color: #102770;
-    color: #ffeba7;
+    background-color: #495361; /* Fondo del botón de usuario en hover/activo */
+    color: #e6eaef; /* Color del texto del botón de usuario en hover/activo */
     border: none;
   }
-  
+
   .userIcon {
     margin-right: 10px;
   }
-  
+
   .userName {
     font-size: 15px;
     font-weight: bold;
   }
-  
+
   .menuContainer {
     position: relative;
   }
-  
+
   .menu {
     position: absolute;
     top: calc(100% + 10px);
     left: 18px;
     top: 70px;
-    background-color: #36373f;
+    background-color: #2f3b46; /* Fondo del menú */
     border-radius: 5px;
     padding: 8px;
     list-style-type: none;
     z-index: 22;
   }
-  
+
   .menuItem {
     margin-bottom: 2px;
   }
-  
+
   .menuItem button {
     background: none;
     border: none;
-    color: white;
+    color: #d6e0ec; /* Color del texto del ítem del menú */
     cursor: pointer;
   }
-  
+
   .menuItem button:hover {
-    color: #ffeba7;
+     color: #ffffff; /* Color del ítem del menú en hover */
   }
   .userIcons {
     position: fixed;

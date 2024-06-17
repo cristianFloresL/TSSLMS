@@ -35,7 +35,7 @@
   line-height: 24px;
   font-weight: 800;
   font-family: Inter;
-  color: #ffeba7;
+  color: #a0aec0;
   text-align: left;
 }
 .logon {
@@ -68,14 +68,14 @@
   background-color: transparent;
   font-size: 16px;
   font-family: Inter;
-  color: #fff;
+  color: #cbd5e1;
   text-align: left;
   display: inline-block;
 }
 .about:hover,
 .get-started-for:hover,
 .pricing:hover {
-  color: #ffeba7;
+  color: #a0aec0;
 }
 .pricing {
   text-decoration: none;
@@ -94,7 +94,7 @@
 .nav-bar {
   text-decoration: none;
   align-self: stretch;
-  background-color: #1f2029;
+  background-color: #1e293b;
   align-items: center;
   justify-content: space-between;
   padding: 24px 80px 24px 45px;
@@ -113,7 +113,7 @@
   font-size: 16px;
   letter-spacing: -0.02em;
   line-height: 150%;
-  color: #9ca3af;
+  color: #b8b8b9;
 }
 .heading-text {
   align-self: stretch;
@@ -130,25 +130,25 @@
   line-height: 16px;
   font-weight: 500;
   font-family: Inter;
-  color: #102770;
+  color: #334155;
   text-align: left;
   display: inline-block;
   flex-shrink: 0;
 }
 .cta-02 {
   border-radius: 6px;
-  background-color: #ffeba7;
+  background-color: #a0aec0;
   flex-direction: row;
   padding: 18px 32px;
-  color: #102770;
+  color: #1e293b;
   font-size: 15px; 
   text-decoration: none;
   font-weight: bold;
 }
 .cta-02:hover,
 .cta-button:hover {
-  background-color: #102770;
-  color: #ffeba7;
+  background-color: #262e39;
+  color: #e6eaef;
 }
 .cta-02,
 .cta-button,
@@ -162,7 +162,7 @@
   border: 0;
   padding: 0;
   border-radius: 5px;
-  background-color: #ffeba7;
+  background-color: #a0aec0;
   flex-direction: row;
 }
 .heading-cta {
@@ -196,7 +196,7 @@
 }
 .image-2:hover,
 .image-3:hover {
-  filter: drop-shadow(0 4px 4px rgba(255, 255, 255, 0.25));
+  filter: drop-shadow(0 4px 4px rgba(160, 174, 192, 0.25));
 }
 .image-3 {
   text-decoration: none;
@@ -225,7 +225,7 @@
   align-self: stretch;
   gap: 20px;
   font-size: 14px;
-  color: #fff;
+  color: #cbd5e1;
 }
 .heading-logo {
   flex: 1;
@@ -270,11 +270,11 @@
 }
 .content {
   align-self: stretch;
-  background-color: #1f2029;
+  background-color: #1e293b; /* Color oscuro para el fondo del contenido */
   padding: 48px 0 80px 80px;
   gap: 34px;
   font-size: 60px;
-  color: #ffeba7;
+  color: #d6dce4; /* Color más claro para el texto */
   height: calc(100vh - 30vh);
 }
 .hero-06,
@@ -283,7 +283,7 @@
 }
 .image {
   align-self: stretch;
-  background-color: #ffeba7;
+  background-color: #334155; /* Color oscuro para el fondo de la imagen */
   height:90px;
 }
 .hero-06 {
@@ -295,6 +295,6 @@
   justify-content: flex-start;
   text-align: left;
   font-size: 16px;
-  color: #fff;
+  color: #e2e7ed; /* Color más claro para el texto general */
   font-family: Inter;
 }
