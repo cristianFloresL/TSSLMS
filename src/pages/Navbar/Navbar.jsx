@@ -8,13 +8,18 @@ import { UserContext } from '../../context/UserContext';
 import { FiLogOut } from 'react-icons/fi';
  
 const Navbar = () => {
+   
     const [searchTerm, setSearchTerm] = useState("");
     const [menuOpen, setMenuOpen] = useState(false);
     const { currentUser, setCurrentUser, setRoleC } = useContext(UserContext); 
+
     const dropdownRef = useRef(null);
+
     const navigate = useNavigate();
+
     const handleSearchInputChange = (event) => {
       setSearchTerm(event.target.value);
+  
     };
 
     const toggleMenu = () => {
@@ -50,6 +55,7 @@ const Navbar = () => {
         <img src={logo} alt="Logo" className={styles.logo} style={{ width: '50px', height: '60px' }} />
         </NavLink>
         <ul className={styles.nav__items}>
+
             <NavLink
               className={({ isActive }) =>
                 `${isActive && styles.active} ${styles.nav__item}`
@@ -59,6 +65,7 @@ const Navbar = () => {
               <span className={styles.label}>Inicio</span>
               <FontAwesomeIcon icon={faHome} />
             </NavLink>
+
             <NavLink
               className={({ isActive }) =>
                 `${isActive && styles.active} ${styles.nav__item}`
@@ -68,6 +75,8 @@ const Navbar = () => {
               <span className={styles.label}>Mis Cursos</span>
               <FontAwesomeIcon icon={faGraduationCap} />
             </NavLink>
+
+
             <NavLink
               className={({ isActive }) =>
                 `${isActive && styles.active} ${styles.nav__item}`
@@ -77,6 +86,8 @@ const Navbar = () => {
               <span className={styles.label}>Probando Codigo</span>
               <FontAwesomeIcon icon={faFileCode} />
             </NavLink>
+
+
             <NavLink
               className={({ isActive }) =>
                 `${isActive && styles.active} ${styles.nav__item}`
@@ -87,13 +98,16 @@ const Navbar = () => {
                 <input
                   className={styles.search__input}
                   type="text"
-                  placeholder="Busqueda"
+                  placeholder="Busqueda..."
                   value={searchTerm} 
                   onChange={handleSearchInputChange}
+                 
                 />
               </span>
               <FontAwesomeIcon icon={faSearch} />
             </NavLink>
+
+
         </ul>
         {menuOpen && (
         <ul className={styles.menu}>

@@ -15,6 +15,7 @@ import CourseDetail from './pages/DetallesCurso/CourseDetail';
 import SubscribedCourses from './pages/MisCursos/SubscribedCourses';
 import ViewCourse from './pages/DetallesCurso/ViewCourse';
 import ProvarCodigo from './pages/PruevaDeCodigoPlano/Pruevadecodigo';
+import Busqueda from './pages/busqueda/Busqueda';
 
 function PrivateAdminRoute({ element }) {
   const { roleC } = useContext(UserContext);
@@ -53,7 +54,7 @@ function UserRoutes() {
       <Navbar />
       <Routes>
         <Route path="/course/:courseId" element={<CourseDetail />} />
-        <Route path='/Search' element={<h1>Busqueda</h1>}/>
+        <Route path='/Search' element={<Busqueda/>}/>
         <Route path='/MyCourses' element={<SubscribedCourses />}/>
         <Route path="/viewcourse/:courseId" element={<ViewCourse />} />        
         <Route path="/PrueCod" element={<ProvarCodigo />}/>
