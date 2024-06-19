@@ -40,7 +40,7 @@ function ProvarCodigo() {
       )}
 
       <iframe
-        src="https://rextester.com/theme"
+        src="https://www.onlinegdb.com/"
         title="RexTester"
         width="100%"
         height="100%"
