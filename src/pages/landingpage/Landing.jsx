@@ -20,19 +20,20 @@ const Landing = () => {
   }, []);
 
   return (
-    <div className="hero-06">
+    <div className="hero-06"> 
       <div className="nav-bar">
         <button className="logon">
           <img className="image-1-icon" alt="" src="/image-1@2x.png" />
           <div className="ovonrueden">SISMODE</div>
         </button>
+        
         <div className="menu">
-          <button className="about">Acerca de</button>
-          <button className="about">Contacto</button>
-          <a className="pricing" onClick={onPricingClick}>
-            UMSS
+          <a className="">Acerca de</a>
+          <a className="">Contacto</a>
+          <a className="" onClick={onPricingClick}>
+            UMSS 
           </a>
-          <a className="pricing" onClick={onSupportClick}>
+          <a className="" onClick={onSupportClick}>
             FCYT
           </a>
         </div>
@@ -45,10 +46,10 @@ const Landing = () => {
                 Sistema de Aprendizaje y Modelos de Desarrollo
               </div>
               <div className="vestibulum-placerat">
-              La plataforma de LMS y centro de contenido integral 
-              para la simulación de sistemas, ofreciendo una experiencia 
-              educativa e interactiva, diseñada para los 
-              estudiantes de la Universidad San Simón.
+                La plataforma de LMS y centro de contenido integral 
+                para la simulación de sistemas, ofreciendo una experiencia 
+                educativa e interactiva, diseñada para los 
+                estudiantes de la Universidad San Simón.
               </div>
             </div>
             <button className="cta-button">
@@ -65,12 +66,12 @@ const Landing = () => {
         </div>
         <div className="design-parent">
           <div className="design">
-            <img className="vector-icon" alt="" src="/vector.svg" />
+            {/* <img className="vector-icon" alt="" src="/vector.svg" /> */}
           </div>
-          <img className="frame-icon" alt="" src="/frame.svg" />
+          {/* <img className="frame-icon" alt="" src="/frame.svg" /> */}
         </div>
       </div>
-      <footer className="image" />
+      <footer className="footer">Footer Content</footer>
     </div>
   );
 };

@@ -236,7 +236,7 @@ const LoginForm = () => {
                                                 onChange={handleEmailChange}
                                                 name="logemail"
                                                 className={`form-style ${logineError ? 'input-error' : ''}`}
-                                                placeholder="Tu Correo"
+                                                placeholder="Tu Correo Institucional"
                                                 id="logemail"
                                                 autoComplete="off"
                                             />

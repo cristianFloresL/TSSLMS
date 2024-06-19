@@ -6,7 +6,7 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import { Edit, Delete } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 
-const CourseList = () => {
+const CourseList = () => { 
   const [courses, setCourses] = useState([]);
   const [groups, setGroups] = useState([]);
   const [openEditModal, setOpenEditModal] = useState(false);

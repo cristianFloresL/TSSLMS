@@ -23,12 +23,14 @@
     animation-timing-function: ease-out;
   }
 }
+
 .image-1-icon {
   width: 40px;
   position: relative;
   height: 40px;
   object-fit: cover;
 }
+
 .ovonrueden {
   position: relative;
   font-size: 24px;
@@ -38,6 +40,7 @@
   color: #a0aec0;
   text-align: left;
 }
+
 .logon {
   cursor: pointer;
   border: 0;
@@ -51,10 +54,12 @@
   justify-content: flex-start;
   gap: 12px;
 }
+
 .logon:hover {
   animation: 5s step-start 0s 1 normal none pulsate;
   opacity: 1;
 }
+
 .about,
 .pricing {
   position: relative;
@@ -62,6 +67,7 @@
   font-weight: 500;
   cursor: pointer;
 }
+
 .about {
   border: 0;
   padding: 0;
@@ -72,25 +78,33 @@
   text-align: left;
   display: inline-block;
 }
+
 .about:hover,
 .get-started-for:hover,
 .pricing:hover {
   color: #a0aec0;
 }
+
 .pricing {
   text-decoration: none;
   color: inherit;
 }
+
 .menu,
 .nav-bar {
   display: flex;
   flex-direction: row;
 }
+
 .menu {
+  display: flex;
+  color: #d6dce4;
+  flex-direction: row;
   align-items: flex-start;
   justify-content: flex-start;
   gap: 36px;
 }
+
 .nav-bar {
   text-decoration: none;
   align-self: stretch;
@@ -100,6 +114,7 @@
   padding: 24px 80px 24px 45px;
   color: inherit;
 }
+
 .find-the-most {
   align-self: stretch;
   position: relative;
@@ -107,6 +122,7 @@
   line-height: 60px;
   font-weight: 800;
 }
+
 .vestibulum-placerat {
   align-self: stretch;
   position: relative;
@@ -115,6 +131,7 @@
   line-height: 150%;
   color: #b8b8b9;
 }
+
 .heading-text {
   align-self: stretch;
   display: flex;
@@ -123,6 +140,7 @@
   justify-content: flex-start;
   gap: 20px;
 }
+
 .get-started-for {
   width: 97px;
   position: relative;
@@ -135,21 +153,24 @@
   display: inline-block;
   flex-shrink: 0;
 }
+
 .cta-02 {
   border-radius: 6px;
   background-color: #a0aec0;
   flex-direction: row;
   padding: 18px 32px;
   color: #1e293b;
-  font-size: 15px; 
+  font-size: 15px;
   text-decoration: none;
   font-weight: bold;
 }
+
 .cta-02:hover,
 .cta-button:hover {
   background-color: #262e39;
   color: #e6eaef;
 }
+
 .cta-02,
 .cta-button,
 .heading-cta {
@@ -157,6 +178,7 @@
   align-items: flex-start;
   justify-content: flex-start;
 }
+
 .cta-button {
   cursor: pointer;
   border: 0;
@@ -164,12 +186,17 @@
   border-radius: 5px;
   background-color: #a0aec0;
   flex-direction: row;
+  margin-top: 20px; /* Espacio superior para separar del texto */
+  align-items: center; /* Centrar elementos horizontalmente */
+  justify-content: center; /* Centrar elementos verticalmente */
 }
+
 .heading-cta {
   align-self: stretch;
   flex-direction: column;
   gap: 52px;
 }
+
 .heading {
   align-self: stretch;
   position: relative;
@@ -178,6 +205,7 @@
   text-transform: uppercase;
   font-weight: 600;
 }
+
 .image-2,
 .image-3 {
   position: relative;
@@ -186,6 +214,7 @@
   background-position: top;
   cursor: pointer;
 }
+
 .image-2 {
   border: 0;
   padding: 0;
@@ -194,49 +223,58 @@
   height: 91px;
   background-image: url(/image-2@3x.png);
 }
+
 .image-2:hover,
 .image-3:hover {
   filter: drop-shadow(0 4px 4px rgba(160, 174, 192, 0.25));
 }
+
 .image-3 {
   text-decoration: none;
   width: 99px;
   height: 99px;
   background-image: url(/image-3@3x.png);
 }
+
 .heading-logo,
 .logo-cloud,
 .logos {
   display: flex;
   justify-content: flex-start;
 }
+
 .logos {
   align-self: stretch;
   flex-direction: row;
   align-items: center;
   gap: 32px;
 }
+
 .heading-logo,
 .logo-cloud {
   flex-direction: column;
   align-items: flex-start;
 }
+
 .logo-cloud {
   align-self: stretch;
   gap: 20px;
   font-size: 14px;
   color: #cbd5e1;
 }
+
 .heading-logo {
   flex: 1;
   height: 627px;
   gap: 96px;
 }
+
 .vector-icon {
   width: 285px;
   position: relative;
   height: 443px;
 }
+
 .design {
   width: 652px;
   flex: 1;
@@ -249,6 +287,7 @@
   position: undefined;
   align-self: start;
 }
+
 .frame-icon {
   width: 585px;
   position: relative;
@@ -257,44 +296,125 @@
   flex-shrink: 0;
   margin-left: -580px;
 }
-.content,
-.design-parent {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-start;
-}
-.design-parent {
-  width: 653px;
-  height: 618px;
-}
+
 .content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
   align-self: stretch;
-  background-color: #1e293b; /* Color oscuro para el fondo del contenido */
+  background-color: #1e293b;
   padding: 48px 0 80px 80px;
   gap: 34px;
   font-size: 60px;
-  color: #d6dce4; /* Color más claro para el texto */
+  color: #d6dce4;
   height: calc(100vh - 30vh);
 }
+
 .hero-06,
-.image {
+.footer {
   position: relative;
 }
-.image {
+
+.footer {
   align-self: stretch;
-  background-color: #334155; /* Color oscuro para el fondo de la imagen */
-  height:90px;
-}
-.hero-06 {
-  width: 100%;
-  min-height: 100vh;
+  background-color: #334155;
+  height: 90px;
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-  text-align: left;
-  font-size: 16px;
-  color: #e2e7ed; /* Color más claro para el texto general */
-  font-family: Inter;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+/* Media queries para hacer responsive */
+@media (max-width: 1023px) {
+  .nav-bar {
+    padding: 20px 40px 20px 25px;
+  }
+
+  .heading-text {
+    gap: 15px;
+  }
+}
+
+@media (max-width: 767px) {
+  .nav-bar {
+    padding: 15px 20px;
+  }
+
+  .heading-text {
+    gap: 10px;
+  }
+
+  .image-1-icon {
+    width: 30px;
+    height: 30px;
+  }
+
+  .ovonrueden {
+    font-size: 20px;
+    line-height: 20px;
+  }
+
+  .logon {
+    width: 150px;
+    height: 30px;
+    gap: 8px;
+  }
+
+  .about,
+  .pricing {
+    font-size: 14px;
+  }
+
+  .menu {
+    gap: 24px;
+  }
+
+  .get-started-for {
+    width: 80px;
+    font-size: 14px;
+    line-height: 14px;
+  }
+
+  .heading {
+    font-size: 18px;
+    line-height: 18px;
+  }
+  
+}
+
+@media only screen and (max-width: 600px) {
+  .menu {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .nav-bar {
+    padding: 12px;
+  }
+
+  .heading-logo {
+    gap: 20px;
+    align-items: center;
+  }
+  
+
+  .content {
+    padding: 20px;
+    gap: 20px;
+    font-size: 24px;
+  }
+  .hero-06 {
+    padding-bottom: 0; /* Asegurar que no haya espacio adicional */
+  }
+  .heading-cta {
+    align-items: center; /* Centrar los elementos horizontalmente */
+    text-align: center; /* Alinear el texto al centro */
+  }
+
+  .cta-button {
+    margin-top: 20px; /* Agregar un espacio superior para separar del texto */
+  }
 }
