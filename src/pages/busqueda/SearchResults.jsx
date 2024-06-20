@@ -67,9 +67,13 @@ const SearchResults = () => {
     setSearchTerm(event.target.value);
   };
 
-  const filteredGroups = groups.filter(group =>
+//   const filteredGroups = groups.filter(group =>
+//     group.groupName.toLowerCase().includes(searchTerm.toLowerCase())
+//   );
+const filteredGroups = searchTerm.trim() !== '' ? groups.filter(group =>
     group.groupName.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+) : [];
+
 
   return (
     <ThemeProvider theme={theme}>
