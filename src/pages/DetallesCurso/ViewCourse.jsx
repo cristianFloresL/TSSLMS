@@ -32,7 +32,7 @@ const ViewCourse = () => {
   const [openThemes, setOpenThemes] = useState([false, false, false, false, false]); // Ocultar los temas por defecto
   const [loading, setLoading] = useState(true); // Estado de carga
   const defaultLayoutPluginInstance = defaultLayoutPlugin();
-
+  
   useEffect(() => {
     const fetchCourse = async () => {
       const courseRef = doc(firestore, 'clases', courseId);

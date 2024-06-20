@@ -15,6 +15,7 @@ import CourseDetail from './pages/DetallesCurso/CourseDetail';
 import SubscribedCourses from './pages/MisCursos/SubscribedCourses';
 import ViewCourse from './pages/DetallesCurso/ViewCourse';
 import ProvarCodigo from './pages/PruevaDeCodigoPlano/Pruevadecodigo';
+import Generado from './pages/Generadores/GeneradorCM';
 
 function PrivateAdminRoute({ element }) {
   const { roleC } = useContext(UserContext);
@@ -68,6 +69,7 @@ function GestRoutes() {
       <Routes>
         <Route path='/Login' element={<LoginForm />}/>
         <Route path='/Recuperar' element={<PasswordResetForm />}/>
+        <Route path='/Generar' element={<Generado />}/>
       </Routes>
     </div>
   );

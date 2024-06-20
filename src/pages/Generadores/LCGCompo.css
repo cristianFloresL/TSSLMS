@@ -1,0 +1,59 @@
+.lcg-container {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+}
+
+.inputs-container,
+.equation,
+.buttons,
+ul {
+  margin-bottom: 10px;
+}
+
+.right-container {
+  width: 40%;
+  text-align: left; 
+}
+
+.left-container {
+  width: 55%;
+}
+
+.chart-container,
+.code-section {
+  margin-bottom: 20px;
+}
+
+.code-section pre {
+  background-color: #f4f4f4;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.equation p,
+.inputs-container label {
+  margin: 5px 0;
+}
+
+.buttons button {
+  margin-right: 10px;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+ul li {
+  background: #f4f4f4;
+  margin-bottom: 5px;
+  padding: 5px;
+  border-radius: 4px;
+}
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
