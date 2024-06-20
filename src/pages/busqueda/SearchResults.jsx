@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { firestore } from '../../connection/firebaseConfig';
 import { collection, getDocs } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
-import { Card, CardMedia, CardContent, Typography, Grid, Box } from '@mui/material';
+import { Card, CardMedia, CardContent, Typography, Grid, Box, TextField } from '@mui/material';
 import { styled } from '@mui/system';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
@@ -40,8 +40,9 @@ const GroupBadge = styled('div')(({ theme }) => ({
   borderRadius: '5px',
 })); 
 
-const CoursesList = () => {
+const SearchResults = () => {
   const [groups, setGroups] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -62,16 +63,34 @@ const CoursesList = () => {
     navigate(`/User/course/${groupId}`);
   };
 
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const filteredGroups = groups.filter(group =>
+    group.groupName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <ThemeProvider theme={theme}>
       <Box mt={3} mx="auto" maxWidth={1200} px={3}>
         <Box py={2} mb={3} bgcolor="#f0f0f0" borderRadius={5} textAlign="center">
           <Typography variant="h4" gutterBottom style={{ color: '#1f2029', fontWeight: 'bold', marginTop: '7px' }}>
-            Grupos Disponibles
+            Resultado de Busqueda
           </Typography>
         </Box>
+        <TextField
+       
+          label="Buscar grupo"
+          variant="outlined"
+          fullWidth
+          value={searchTerm}
+          onChange={handleSearchChange}
+          margin="normal"
+          sx={{ maxWidth: '600px', width: '100%' }} 
+        />
         <Grid container spacing={3}>
-          {groups.map((group) => (
+          {filteredGroups.map((group) => (
             <Grid item xs={12} sm={6} md={4} key={group.id}>
               <StyledCard onClick={() => handleCardClick(group.id)}>
                 <StyledCardMedia
@@ -95,4 +114,4 @@ const CoursesList = () => {
   );
 };
 
-export default CoursesList;
+export default SearchResults;

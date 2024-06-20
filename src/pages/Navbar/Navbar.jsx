@@ -19,7 +19,6 @@ const Navbar = () => {
 
     const handleSearchInputChange = (event) => {
       setSearchTerm(event.target.value);
-  
     };
 
     const toggleMenu = () => {
@@ -95,16 +94,19 @@ const Navbar = () => {
               to="/User/Search"
             >
               <span className={styles.label}>
-                <input
+                {/* <input
                   className={styles.search__input}
+                  variant="outlined"
                   type="text"
                   placeholder="Busqueda..."
                   value={searchTerm} 
                   onChange={handleSearchInputChange}
                  
-                />
+                /> */}
               </span>
-              <FontAwesomeIcon icon={faSearch} />
+              <FontAwesomeIcon icon={faSearch} 
+              
+              />
             </NavLink>
 
 
