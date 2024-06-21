@@ -20,52 +20,53 @@ function LCGComponent() {
   const [generator, setGenerator] = useState(() => LCG(seed, a, c, m));
   const [form, setForm] = useState(`Xn+1 = (${a} * Xn + ${c}) % ${m} ; Xn: ${seed}`);
   const [cod, setCod] = useState(`
-    import java.util.ArrayList;
-    import java.util.List;
+import java.util.ArrayList;
+import java.util.List;
 
-    class Rextester {  
-        private long a;
-        private long c;
-        private long m;
-        private long seed;
+class Rextester {  
+    private long a;
+    private long c;
+    private long m;
+    private long seed;
 
-        public Rextester(long seed, long a, long c, long m) {
-            this.seed = seed;
-            this.a = a;
-            this.c = c;
-            this.m = m;
+    public Rextester(long seed, long a, long c, long m) {
+        this.seed = seed;
+        this.a = a;
+        this.c = c;
+        this.m = m;
+    }
+
+    public List<Long> generate(int count) {
+        List<Long> randomNumbers = new ArrayList<>();
+        long current = seed;
+
+        for (int i = 0; i < count; i++) {
+            current = (a * current + c) % m;
+            randomNumbers.add(current);
         }
 
-        public List<Long> generate(int count) {
-            List<Long> randomNumbers = new ArrayList<>();
-            long current = seed;
+        return randomNumbers;
+    }
 
-            for (int i = 0; i < count; i++) {
-                current = (a * current + c) % m;
-                randomNumbers.add(current);
-            }
+    public static void main(String[] args) {
+        long seed = ${seed}; // Semilla inicial
+        long a = ${a}; // Multiplicador
+        long c = ${c}; // Incremento
+        long m = ${m}; // Módulo 
 
-            return randomNumbers;
-        }
+        Rextester lcg = new Rextester(seed, a, c, m);
+        List<Long> randomNumbers = lcg.generate((int) m); // Genera m números aleatorios
 
-        public static void main(String[] args) {
-            long seed = ${seed}; // Semilla inicial
-            long a = ${a}; // Multiplicador
-            long c = ${c}; // Incremento
-            long m = ${m}; // Módulo 
-
-            Rextester lcg = new Rextester(seed, a, c, m);
-            List<Long> randomNumbers = lcg.generate((int) m); // Genera m números aleatorios
-
-            // Imprime los números aleatorios generados
-            System.out.println("Lista de números aleatorios generados:");
-            for (long number : randomNumbers) {
-                System.out.println(number);
-            }
+        // Imprime los números aleatorios generados
+        System.out.println("Lista de números aleatorios generados:");
+        for (long number : randomNumbers) {
+            System.out.println(number);
         }
     }
+}
   `);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isNumbersModalOpen, setIsNumbersModalOpen] = useState(false);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -74,6 +75,14 @@ function LCGComponent() {
   const closeModal = () => {
     setIsModalOpen(false);
   };
+  const openNumbersModal = () => {
+    setIsNumbersModalOpen(true);
+  };
+
+  const closeNumbersModal = () => {
+    setIsNumbersModalOpen(false);
+  };
+  
   useEffect(() => {
     if (a == null || a < 0) { setA(0); }
     if (c == null || c < 0) { setC(0); }
@@ -249,12 +258,20 @@ class Rextester {
           <button onClick={handleReset}>Resetear Generador</button>
         </div>
         <h3>Lista Números Aleatorios</h3>
+        <div className="buttons">
+        <button onClick={openNumbersModal} disabled={numbers.length === 0}>Mostrar Números Generados</button>
+      
+        </div>
+       
+      </div>
+      <Modal isOpen={isNumbersModalOpen} onClose={closeNumbersModal}>
+        <h3>Números Generados:</h3>
         <ul>
           {numbers.map((number, index) => (
-            <li key={index}>{number}</li>
+            <li key={index}>{number.toFixed(4)}</li>
           ))}
         </ul>
-      </div>
+      </Modal>
     </div>
   );
 }

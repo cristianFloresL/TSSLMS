@@ -25,56 +25,57 @@ function RejectionSamplingComponent() {
   const [generator, setGenerator] = useState(() => rejectionSampling(mean, stdDev));
   const [form, setForm] = useState(`Target: N(${mean}, ${stdDev}), Proposal: U(0, 1)`);
   const [cod, setCod] = useState(`
-    // Código Java para el Método del Rechazo
-    import java.util.ArrayList;
-    import java.util.List;
-    import java.util.Random;
+// Código Java para el Método del Rechazo
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
-    class Rextester {  
-        private double mean;
-        private double stdDev;
+class Rextester {  
+    private double mean;
+    private double stdDev;
 
-        public Rextester(double mean, double stdDev) {
-            this.mean = mean;
-            this.stdDev = stdDev;
+    public Rextester(double mean, double stdDev) {
+        this.mean = mean;
+        this.stdDev = stdDev;
+    }
+
+    private double target(double x) {
+        return (1 / (stdDev * Math.sqrt(2 * Math.PI))) * Math.exp(-0.5 * Math.pow((x - mean) / stdDev, 2));
+    }
+
+    public List<Double> generate(int count) {
+        List<Double> randomNumbers = new ArrayList<>();
+        Random rand = new Random();
+
+        for (int i = 0; i < count; i++) {
+            double Y, U;
+            do {
+                Y = rand.nextDouble(); // Proposal: Uniform(0, 1)
+                U = rand.nextDouble();
+            } while (U >= target(Y));
+            randomNumbers.add(Y);
         }
 
-        private double target(double x) {
-            return (1 / (stdDev * Math.sqrt(2 * Math.PI))) * Math.exp(-0.5 * Math.pow((x - mean) / stdDev, 2));
-        }
+        return randomNumbers;
+    }
 
-        public List<Double> generate(int count) {
-            List<Double> randomNumbers = new ArrayList<>();
-            Random rand = new Random();
+    public static void main(String[] args) {
+        double mean = ${mean}; // Media de la distribución
+        double stdDev = ${stdDev}; // Desviación estándar de la distribución
 
-            for (int i = 0; i < count; i++) {
-                double Y, U;
-                do {
-                    Y = rand.nextDouble(); // Proposal: Uniform(0, 1)
-                    U = rand.nextDouble();
-                } while (U >= target(Y));
-                randomNumbers.add(Y);
-            }
+        Rextester rejectionSampling = new Rextester(mean, stdDev);
+        List<Double> randomNumbers = rejectionSampling.generate(1000); // Genera 1000 números aleatorios
 
-            return randomNumbers;
-        }
-
-        public static void main(String[] args) {
-            double mean = ${mean}; // Media de la distribución
-            double stdDev = ${stdDev}; // Desviación estándar de la distribución
-
-            Rextester rejectionSampling = new Rextester(mean, stdDev);
-            List<Double> randomNumbers = rejectionSampling.generate(1000); // Genera 1000 números aleatorios
-
-            // Imprime los números aleatorios generados
-            System.out.println("Lista de números aleatorios generados:");
-            for (double number : randomNumbers) {
-                System.out.println(number);
-            }
+        // Imprime los números aleatorios generados
+        System.out.println("Lista de números aleatorios generados:");
+        for (double number : randomNumbers) {
+            System.out.println(number);
         }
     }
+}
   `);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isNumbersModalOpen, setIsNumbersModalOpen] = useState(false);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -83,60 +84,66 @@ function RejectionSamplingComponent() {
   const closeModal = () => {
     setIsModalOpen(false);
   };
+  const openNumbersModal = () => {
+    setIsNumbersModalOpen(true);
+  };
 
+  const closeNumbersModal = () => {
+    setIsNumbersModalOpen(false);
+  };
   useEffect(() => {
     if (stdDev == null || stdDev <= 0) { setStdDev(1); }
     setGenerator(() => rejectionSampling(mean, stdDev));
     setForm(`Target: N(${mean}, ${stdDev}), Proposal: U(0, 1)`);
     setCod(`
-    // Código Java para el Método del Rechazo
-    import java.util.ArrayList;
-    import java.util.List;
-    import java.util.Random;
+// Código Java para el Método del Rechazo
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
-    class Rextester {  
-        private double mean;
-        private double stdDev;
+class Rextester {  
+    private double mean;
+    private double stdDev;
 
-        public Rextester(double mean, double stdDev) {
-            this.mean = mean;
-            this.stdDev = stdDev;
+    public Rextester(double mean, double stdDev) {
+        this.mean = mean;
+        this.stdDev = stdDev;
+    }
+
+    private double target(double x) {
+        return (1 / (stdDev * Math.sqrt(2 * Math.PI))) * Math.exp(-0.5 * Math.pow((x - mean) / stdDev, 2));
+    }
+
+    public List<Double> generate(int count) {
+        List<Double> randomNumbers = new ArrayList<>();
+        Random rand = new Random();
+
+        for (int i = 0; i < count; i++) {
+            double Y, U;
+            do {
+                Y = rand.nextDouble(); // Proposal: Uniform(0, 1)
+                U = rand.nextDouble();
+            } while (U >= target(Y));
+            randomNumbers.add(Y);
         }
 
-        private double target(double x) {
-            return (1 / (stdDev * Math.sqrt(2 * Math.PI))) * Math.exp(-0.5 * Math.pow((x - mean) / stdDev, 2));
-        }
+        return randomNumbers;
+    }
 
-        public List<Double> generate(int count) {
-            List<Double> randomNumbers = new ArrayList<>();
-            Random rand = new Random();
+    public static void main(String[] args) {
+        double mean = ${mean}; // Media de la distribución
+        double stdDev = ${stdDev}; // Desviación estándar de la distribución
 
-            for (int i = 0; i < count; i++) {
-                double Y, U;
-                do {
-                    Y = rand.nextDouble(); // Proposal: Uniform(0, 1)
-                    U = rand.nextDouble();
-                } while (U >= target(Y));
-                randomNumbers.add(Y);
-            }
+        Rextester rejectionSampling = new Rextester(mean, stdDev);
+        List<Double> randomNumbers = rejectionSampling.generate(1000); // Genera 1000 números aleatorios
 
-            return randomNumbers;
-        }
-
-        public static void main(String[] args) {
-            double mean = ${mean}; // Media de la distribución
-            double stdDev = ${stdDev}; // Desviación estándar de la distribución
-
-            Rextester rejectionSampling = new Rextester(mean, stdDev);
-            List<Double> randomNumbers = rejectionSampling.generate(1000); // Genera 1000 números aleatorios
-
-            // Imprime los números aleatorios generados
-            System.out.println("Lista de números aleatorios generados:");
-            for (double number : randomNumbers) {
-                System.out.println(number);
-            }
+        // Imprime los números aleatorios generados
+        System.out.println("Lista de números aleatorios generados:");
+        for (double number : randomNumbers) {
+            System.out.println(number);
         }
     }
+}
     `);
   }, [mean, stdDev]);
 
@@ -239,14 +246,23 @@ function RejectionSamplingComponent() {
         <div className="buttons">
           <button onClick={handleGenerate}>Generar Números</button>
           <button onClick={handleReset}>Resetear Generador</button>
+          
         </div>
         <h3>Lista Números Aleatorios</h3>
+        <div className="buttons">
+        <button onClick={openNumbersModal} disabled={numbers.length === 0}>Mostrar Números Generados</button>
+      
+        </div>
+       
+      </div>
+      <Modal isOpen={isNumbersModalOpen} onClose={closeNumbersModal}>
+        <h3>Números Generados:</h3>
         <ul>
           {numbers.map((number, index) => (
             <li key={index}>{number.toFixed(4)}</li>
           ))}
         </ul>
-      </div>
+      </Modal>
     </div>
   );
 }

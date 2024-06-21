@@ -15,7 +15,7 @@ import CourseDetail from './pages/DetallesCurso/CourseDetail';
 import SubscribedCourses from './pages/MisCursos/SubscribedCourses';
 import ViewCourse from './pages/DetallesCurso/ViewCourse';
 import ProvarCodigo from './pages/PruevaDeCodigoPlano/Pruevadecodigo';
-import Generado from './pages/Generadores/GeneradorCM';
+import Generado from './pages/Generadores/GeneradorCL';
 
 function PrivateAdminRoute({ element }) {
   const { roleC } = useContext(UserContext);

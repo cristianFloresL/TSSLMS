@@ -20,46 +20,47 @@ function InverseTransformComponent() {
   const [generator, setGenerator] = useState(() => inverseTransformSampling(lambda));
   const [form, setForm] = useState(`X = -ln(1 - U) / ${lambda}`);
   const [cod, setCod] = useState(`
-    // Código Java para Transformada Inversa
-    import java.util.ArrayList;
-    import java.util.List;
-    import java.util.Random;
+// Código Java para Transformada Inversa
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
-    class Rextester {  
-        private double lambda;
+class Rextester {  
+    private double lambda;
 
-        public Rextester(double lambda) {
-            this.lambda = lambda;
+    public Rextester(double lambda) {
+        this.lambda = lambda;
+    }
+
+    public List<Double> generate(int count) {
+        List<Double> randomNumbers = new ArrayList<>();
+        Random rand = new Random();
+
+        for (int i = 0; i < count; i++) {
+            double U = rand.nextDouble();
+            double X = -Math.log(1 - U) / lambda;
+            randomNumbers.add(X);
         }
 
-        public List<Double> generate(int count) {
-            List<Double> randomNumbers = new ArrayList<>();
-            Random rand = new Random();
+        return randomNumbers;
+    }
 
-            for (int i = 0; i < count; i++) {
-                double U = rand.nextDouble();
-                double X = -Math.log(1 - U) / lambda;
-                randomNumbers.add(X);
-            }
+    public static void main(String[] args) {
+        double lambda = ${lambda}; // Parámetro de la distribución
 
-            return randomNumbers;
-        }
+        Rextester inverseTransform = new Rextester(lambda);
+        List<Double> randomNumbers = inverseTransform.generate(1000); // Genera 1000 números aleatorios
 
-        public static void main(String[] args) {
-            double lambda = ${lambda}; // Parámetro de la distribución
-
-            Rextester inverseTransform = new Rextester(lambda);
-            List<Double> randomNumbers = inverseTransform.generate(1000); // Genera 1000 números aleatorios
-
-            // Imprime los números aleatorios generados
-            System.out.println("Lista de números aleatorios generados:");
-            for (double number : randomNumbers) {
-                System.out.println(number);
-            }
+        // Imprime los números aleatorios generados
+        System.out.println("Lista de números aleatorios generados:");
+        for (double number : randomNumbers) {
+            System.out.println(number);
         }
     }
+}
   `);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isNumbersModalOpen, setIsNumbersModalOpen] = useState(false);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -68,50 +69,56 @@ function InverseTransformComponent() {
   const closeModal = () => {
     setIsModalOpen(false);
   };
+  const openNumbersModal = () => {
+    setIsNumbersModalOpen(true);
+  };
 
+  const closeNumbersModal = () => {
+    setIsNumbersModalOpen(false);
+  };
   useEffect(() => {
     if (lambda == null || lambda <= 0) { setLambda(1); }
     setGenerator(() => inverseTransformSampling(lambda));
     setForm(`X = -ln(1 - U) / ${lambda}`);
     setCod(`
-    // Código Java para Transformada Inversa
-    import java.util.ArrayList;
-    import java.util.List;
-    import java.util.Random;
+// Código Java para Transformada Inversa
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
-    class Rextester {  
-        private double lambda;
+class Rextester {  
+    private double lambda;
 
-        public Rextester(double lambda) {
-            this.lambda = lambda;
+    public Rextester(double lambda) {
+        this.lambda = lambda;
+    }
+
+    public List<Double> generate(int count) {
+        List<Double> randomNumbers = new ArrayList<>();
+        Random rand = new Random();
+
+        for (int i = 0; i < count; i++) {
+            double U = rand.nextDouble();
+            double X = -Math.log(1 - U) / lambda;
+            randomNumbers.add(X);
         }
 
-        public List<Double> generate(int count) {
-            List<Double> randomNumbers = new ArrayList<>();
-            Random rand = new Random();
+        return randomNumbers;
+    }
 
-            for (int i = 0; i < count; i++) {
-                double U = rand.nextDouble();
-                double X = -Math.log(1 - U) / lambda;
-                randomNumbers.add(X);
-            }
+    public static void main(String[] args) {
+        double lambda = ${lambda}; // Parámetro de la distribución
 
-            return randomNumbers;
-        }
+        Rextester inverseTransform = new Rextester(lambda);
+        List<Double> randomNumbers = inverseTransform.generate(1000); // Genera 1000 números aleatorios
 
-        public static void main(String[] args) {
-            double lambda = ${lambda}; // Parámetro de la distribución
-
-            Rextester inverseTransform = new Rextester(lambda);
-            List<Double> randomNumbers = inverseTransform.generate(1000); // Genera 1000 números aleatorios
-
-            // Imprime los números aleatorios generados
-            System.out.println("Lista de números aleatorios generados:");
-            for (double number : randomNumbers) {
-                System.out.println(number);
-            }
+        // Imprime los números aleatorios generados
+        System.out.println("Lista de números aleatorios generados:");
+        for (double number : randomNumbers) {
+            System.out.println(number);
         }
     }
+}
     `);
   }, [lambda]);
 
@@ -209,12 +216,20 @@ function InverseTransformComponent() {
           <button onClick={handleReset}>Resetear Generador</button>
         </div>
         <h3>Lista Números Aleatorios</h3>
+        <div className="buttons">
+        <button onClick={openNumbersModal} disabled={numbers.length === 0}>Mostrar Números Generados</button>
+      
+        </div>
+       
+      </div>
+      <Modal isOpen={isNumbersModalOpen} onClose={closeNumbersModal}>
+        <h3>Números Generados:</h3>
         <ul>
           {numbers.map((number, index) => (
             <li key={index}>{number.toFixed(4)}</li>
           ))}
         </ul>
-      </div>
+      </Modal>
     </div>
   );
 }

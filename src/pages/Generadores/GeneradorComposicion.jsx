@@ -38,72 +38,73 @@ function CompositionSamplingComponent() {
   const [generator, setGenerator] = useState(() => compositionSampling(mean1, stdDev1, mean2, stdDev2, weights));
   const [form, setForm] = useState(`Target: Mix N(${mean1}, ${stdDev1}), N(${mean2}, ${stdDev2}), Weights: [${weights[0]}, ${weights[1]}]`);
   const [cod, setCod] = useState(`
-    // Código Java para el Método de Composición
-    import java.util.ArrayList;
-    import java.util.List;
-    import java.util.Random;
+// Código Java para el Método de Composición
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
-    class Rextester {  
-        private double mean1;
-        private double stdDev1;
-        private double mean2;
-        private double stdDev2;
-        private double weight1;
-        private double weight2;
+class Rextester {  
+    private double mean1;
+    private double stdDev1;
+    private double mean2;
+    private double stdDev2;
+    private double weight1;
+    private double weight2;
 
-        public Rextester(double mean1, double stdDev1, double mean2, double stdDev2, double weight1, double weight2) {
-            this.mean1 = mean1;
-            this.stdDev1 = stdDev1;
-            this.mean2 = mean2;
-            this.stdDev2 = stdDev2;
-            this.weight1 = weight1;
-            this.weight2 = weight2;
-        }
+    public Rextester(double mean1, double stdDev1, double mean2, double stdDev2, double weight1, double weight2) {
+        this.mean1 = mean1;
+        this.stdDev1 = stdDev1;
+        this.mean2 = mean2;
+        this.stdDev2 = stdDev2;
+        this.weight1 = weight1;
+        this.weight2 = weight2;
+    }
 
-        private double normal(double mean, double stdDev) {
-            Random rand = new Random();
-            double u = 0, v = 0;
-            while(u == 0) u = rand.nextDouble();
-            while(v == 0) v = rand.nextDouble();
-            return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v) * stdDev + mean;
-        }
+    private double normal(double mean, double stdDev) {
+        Random rand = new Random();
+        double u = 0, v = 0;
+        while(u == 0) u = rand.nextDouble();
+        while(v == 0) v = rand.nextDouble();
+        return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v) * stdDev + mean;
+    }
 
-        public List<Double> generate(int count) {
-            List<Double> randomNumbers = new ArrayList<>();
-            Random rand = new Random();
+    public List<Double> generate(int count) {
+        List<Double> randomNumbers = new ArrayList<>();
+        Random rand = new Random();
 
-            for (int i = 0; i < count; i++) {
-                double randVal = rand.nextDouble();
-                if (randVal < weight1) {
-                    randomNumbers.add(normal(mean1, stdDev1));
-                } else {
-                    randomNumbers.add(normal(mean2, stdDev2));
-                }
+        for (int i = 0; i < count; i++) {
+            double randVal = rand.nextDouble();
+            if (randVal < weight1) {
+                randomNumbers.add(normal(mean1, stdDev1));
+            } else {
+                randomNumbers.add(normal(mean2, stdDev2));
             }
-
-            return randomNumbers;
         }
 
-        public static void main(String[] args) {
-            double mean1 = ${mean1}; // Media de la primera distribución
-            double stdDev1 = ${stdDev1}; // Desviación estándar de la primera distribución
-            double mean2 = ${mean2}; // Media de la segunda distribución
-            double stdDev2 = ${stdDev2}; // Desviación estándar de la segunda distribución
-            double weight1 = ${weights[0]}; // Peso de la primera distribución
-            double weight2 = ${weights[1]}; // Peso de la segunda distribución
+        return randomNumbers;
+    }
 
-            Rextester compositionSampling = new Rextester(mean1, stdDev1, mean2, stdDev2, weight1, weight2);
-            List<Double> randomNumbers = compositionSampling.generate(1000); // Genera 1000 números aleatorios
+    public static void main(String[] args) {
+        double mean1 = ${mean1}; // Media de la primera distribución
+        double stdDev1 = ${stdDev1}; // Desviación estándar de la primera distribución
+        double mean2 = ${mean2}; // Media de la segunda distribución
+        double stdDev2 = ${stdDev2}; // Desviación estándar de la segunda distribución
+        double weight1 = ${weights[0]}; // Peso de la primera distribución
+        double weight2 = ${weights[1]}; // Peso de la segunda distribución
 
-            // Imprime los números aleatorios generados
-            System.out.println("Lista de números aleatorios generados:");
-            for (double number : randomNumbers) {
-                System.out.println(number);
-            }
+        Rextester compositionSampling = new Rextester(mean1, stdDev1, mean2, stdDev2, weight1, weight2);
+        List<Double> randomNumbers = compositionSampling.generate(1000); // Genera 1000 números aleatorios
+
+        // Imprime los números aleatorios generados
+        System.out.println("Lista de números aleatorios generados:");
+        for (double number : randomNumbers) {
+            System.out.println(number);
         }
     }
+}
   `);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isNumbersModalOpen, setIsNumbersModalOpen] = useState(false);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -113,6 +114,14 @@ function CompositionSamplingComponent() {
     setIsModalOpen(false);
   };
 
+  const openNumbersModal = () => {
+    setIsNumbersModalOpen(true);
+  };
+
+  const closeNumbersModal = () => {
+    setIsNumbersModalOpen(false);
+  };
+
   useEffect(() => {
     if (stdDev1 == null || stdDev1 <= 0) { setStdDev1(1); }
     if (stdDev2 == null || stdDev2 <= 0) { setStdDev2(1); }
@@ -120,70 +129,70 @@ function CompositionSamplingComponent() {
     setGenerator(() => compositionSampling(mean1, stdDev1, mean2, stdDev2, weights));
     setForm(`Target: Mix N(${mean1}, ${stdDev1}), N(${mean2}, ${stdDev2}), Weights: [${weights[0]}, ${weights[1]}]`);
     setCod(`
-    // Código Java para el Método de Composición
-    import java.util.ArrayList;
-    import java.util.List;
-    import java.util.Random;
+// Código Java para el Método de Composición
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
-    class Rextester {  
-        private double mean1;
-        private double stdDev1;
-        private double mean2;
-        private double stdDev2;
-        private double weight1;
-        private double weight2;
+class Rextester {  
+    private double mean1;
+    private double stdDev1;
+    private double mean2;
+    private double stdDev2;
+    private double weight1;
+    private double weight2;
 
-        public Rextester(double mean1, double stdDev1, double mean2, double stdDev2, double weight1, double weight2) {
-            this.mean1 = mean1;
-            this.stdDev1 = stdDev1;
-            this.mean2 = mean2;
-            this.stdDev2 = stdDev2;
-            this.weight1 = weight1;
-            this.weight2 = weight2;
-        }
+    public Rextester(double mean1, double stdDev1, double mean2, double stdDev2, double weight1, double weight2) {
+        this.mean1 = mean1;
+        this.stdDev1 = stdDev1;
+        this.mean2 = mean2;
+        this.stdDev2 = stdDev2;
+        this.weight1 = weight1;
+        this.weight2 = weight2;
+    }
 
-        private double normal(double mean, double stdDev) {
-            Random rand = new Random();
-            double u = 0, v = 0;
-            while(u == 0) u = rand.nextDouble();
-            while(v == 0) v = rand.nextDouble();
-            return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v) * stdDev + mean;
-        }
+    private double normal(double mean, double stdDev) {
+        Random rand = new Random();
+        double u = 0, v = 0;
+        while(u == 0) u = rand.nextDouble();
+        while(v == 0) v = rand.nextDouble();
+        return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v) * stdDev + mean;
+    }
 
-        public List<Double> generate(int count) {
-            List<Double> randomNumbers = new ArrayList<>();
-            Random rand = new Random();
+    public List<Double> generate(int count) {
+        List<Double> randomNumbers = new ArrayList<>();
+        Random rand = new Random();
 
-            for (int i = 0; i < count; i++) {
-                double randVal = rand.nextDouble();
-                if (randVal < weight1) {
-                    randomNumbers.add(normal(mean1, stdDev1));
-                } else {
-                    randomNumbers.add(normal(mean2, stdDev2));
-                }
+        for (int i = 0; i < count; i++) {
+            double randVal = rand.nextDouble();
+            if (randVal < weight1) {
+                randomNumbers.add(normal(mean1, stdDev1));
+            } else {
+                randomNumbers.add(normal(mean2, stdDev2));
             }
-
-            return randomNumbers;
         }
 
-        public static void main(String[] args) {
-            double mean1 = ${mean1}; // Media de la primera distribución
-            double stdDev1 = ${stdDev1}; // Desviación estándar de la primera distribución
-            double mean2 = ${mean2}; // Media de la segunda distribución
-            double stdDev2 = ${stdDev2}; // Desviación estándar de la segunda distribución
-            double weight1 = ${weights[0]}; // Peso de la primera distribución
-            double weight2 = ${weights[1]}; // Peso de la segunda distribución
+        return randomNumbers;
+    }
 
-            Rextester compositionSampling = new Rextester(mean1, stdDev1, mean2, stdDev2, weight1, weight2);
-            List<Double> randomNumbers = compositionSampling.generate(1000); // Genera 1000 números aleatorios
+    public static void main(String[] args) {
+        double mean1 = ${mean1}; // Media de la primera distribución
+        double stdDev1 = ${stdDev1}; // Desviación estándar de la primera distribución
+        double mean2 = ${mean2}; // Media de la segunda distribución
+        double stdDev2 = ${stdDev2}; // Desviación estándar de la segunda distribución
+        double weight1 = ${weights[0]}; // Peso de la primera distribución
+        double weight2 = ${weights[1]}; // Peso de la segunda distribución
 
-            // Imprime los números aleatorios generados
-            System.out.println("Lista de números aleatorios generados:");
-            for (double number : randomNumbers) {
-                System.out.println(number);
-            }
+        Rextester compositionSampling = new Rextester(mean1, stdDev1, mean2, stdDev2, weight1, weight2);
+        List<Double> randomNumbers = compositionSampling.generate(1000); // Genera 1000 números aleatorios
+
+        // Imprime los números aleatorios generados
+        System.out.println("Lista de números aleatorios generados:");
+        for (double number : randomNumbers) {
+            System.out.println(number);
         }
     }
+}
     `);
   }, [mean1, stdDev1, mean2, stdDev2, weights]);
 
@@ -343,14 +352,22 @@ function CompositionSamplingComponent() {
         <div className="buttons">
           <button onClick={handleGenerate}>Generar Números</button>
           <button onClick={handleReset}>Resetear Generador</button>
+          
         </div>
         <h3>Lista Números Aleatorios</h3>
+        <div className="buttons">
+        <button onClick={openNumbersModal} disabled={numbers.length === 0}>Mostrar Números Generados</button>
+      
+        </div>
+      </div>
+      <Modal isOpen={isNumbersModalOpen} onClose={closeNumbersModal}>
+        <h3>Números Generados:</h3>
         <ul>
           {numbers.map((number, index) => (
             <li key={index}>{number.toFixed(4)}</li>
           ))}
         </ul>
-      </div>
+      </Modal>
     </div>
   );
 }
