@@ -16,6 +16,7 @@ import SubscribedCourses from './pages/MisCursos/SubscribedCourses';
 import ViewCourse from './pages/DetallesCurso/ViewCourse';
 import ProvarCodigo from './pages/PruevaDeCodigoPlano/Pruevadecodigo';
 import SearchResults from './pages/busqueda/SearchResults';
+import VideoCall from './pages/videocall/VideoCall';
 
 function PrivateAdminRoute({ element }) {
   const { roleC } = useContext(UserContext);
@@ -49,6 +50,7 @@ function AdminRoutes() {
 }
  
 function UserRoutes() {
+  const userId = 'user-id'
   return (
     <div>
       <Navbar />
@@ -58,6 +60,8 @@ function UserRoutes() {
         <Route path='/MyCourses' element={<SubscribedCourses />}/>
         <Route path="/viewcourse/:courseId" element={<ViewCourse />} />        
         <Route path="/PrueCod" element={<ProvarCodigo />}/>
+        <Route path="/VideoCall" element={<VideoCall userId={userId} />}/>
+
       </Routes>
     </div>
   );

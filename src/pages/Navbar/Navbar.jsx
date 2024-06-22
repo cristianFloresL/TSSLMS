@@ -2,7 +2,7 @@ import React, { useState, useContext, useRef, useEffect} from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import styles from "./Navbar.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHome, faSearch, faUser, faGraduationCap, faFileCode } from "@fortawesome/free-solid-svg-icons";
+import { faHome, faSearch, faUser, faGraduationCap, faFileCode, faCamera, faVideo } from "@fortawesome/free-solid-svg-icons";
 import logo from "../../assets/ELEVA.png";
 import { UserContext } from '../../context/UserContext';
 import { FiLogOut } from 'react-icons/fi';
@@ -94,6 +94,7 @@ const Navbar = () => {
               to="/User/Search"
             >
               <span className={styles.label}>
+                Buscador
                 {/* <input
                   className={styles.search__input}
                   variant="outlined"
@@ -107,6 +108,16 @@ const Navbar = () => {
               <FontAwesomeIcon icon={faSearch} 
               
               />
+            </NavLink>
+
+            <NavLink
+              className={({ isActive }) =>
+                `${isActive && styles.active} ${styles.nav__item}`
+              }
+              to="/User/VideoCall"
+            >
+              <span className={styles.label}>Video llamada</span>
+              <FontAwesomeIcon icon={faVideo} />
             </NavLink>
 
 

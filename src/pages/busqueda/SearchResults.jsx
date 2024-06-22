@@ -57,7 +57,7 @@ const SearchResults = () => {
     };
 
     fetchGroups();
-  }, []);
+  }, []); 
 
   const handleCardClick = (groupId) => {
     navigate(`/User/course/${groupId}`);
