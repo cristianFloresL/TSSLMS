@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { getDoc, doc, collection, getDocs } from 'firebase/firestore';
 import { firestore } from '../../connection/firebaseConfig';
@@ -27,11 +27,14 @@ import VideoLibraryIcon from '@mui/icons-material/VideoLibrary';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
+import ArticleIcon from '@mui/icons-material/Article';
 import LCGMomponent from '../Generadores/GeneradorCM';
 import LCGComponent from '../Generadores/GeneradorCL';
 import CompositionSamplingComponent from '../Generadores/GeneradorComposicion';
 import RejectionSamplingComponent from '../Generadores/GeneradorRechazo';
 import InverseTransformComponent from '../Generadores/GeneradorTransInversa';
+import GroupBoard from './GroupBoard';
+import { SearchContext } from '../../context/SearchContext';
 
 const ViewCourse = () => {
   const { courseId } = useParams();
@@ -44,6 +47,7 @@ const ViewCourse = () => {
   const defaultLayoutPluginInstance = defaultLayoutPlugin();
   const [isVisible, setIsVisible] = useState(false);
   const [scrollTop, setScrollTop] = useState(0);
+  const { setgrupC } = useContext(SearchContext);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -62,7 +66,8 @@ const ViewCourse = () => {
     const fetchCourse = async () => {
       const courseRef = doc(firestore, 'groups', courseId);
       const courseSnapshot = await getDoc(courseRef);
-
+      setgrupC(courseId);
+      console.log(courseId);
       if (courseSnapshot.exists()) {
         setCourse(courseSnapshot.data());
       } else {
@@ -229,6 +234,12 @@ const ViewCourse = () => {
               </div>
             ))
           )}
+          <ListItem button onClick={() => handleResourceClick({ id: 'comp6', type: 'component', title: 'Tablon del Grupo' })}>
+            <ListItemIcon>
+              <ArticleIcon style={{ color: 'blue', fontSize: '30px' }} />
+                </ListItemIcon>
+              <ListItemText primary="Tablon del grupo" />
+            </ListItem>
         </List>
       </Drawer>
       <Box sx={{ flexGrow: 1, p: 3 }}>
@@ -273,6 +284,7 @@ const ViewCourse = () => {
                 selectedResource.id === 'comp3' ? <InverseTransformComponent/> :
                 selectedResource.id === 'comp4' ? <RejectionSamplingComponent /> :
                 selectedResource.id === 'comp5' ? <CompositionSamplingComponent /> :
+                selectedResource.id === 'comp6' ? <GroupBoard /> :
                 null
               ) : (
                 <Box sx={{ height: '70vh' }}>

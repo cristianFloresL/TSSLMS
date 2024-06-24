@@ -17,6 +17,8 @@ import ViewCourse from './pages/DetallesCurso/ViewCourse';
 import ProvarCodigo from './pages/PruevaDeCodigoPlano/Pruevadecodigo';
 import SearchResults from './pages/busqueda/SearchResults';
 import VideoCall from './pages/videocall/VideoCall';
+import GroupTasksBoard from './pages/Tareas/GroupTasksBoard';
+import TaskDetails from './pages/Tareas/TaskDetails';
 
 function PrivateAdminRoute({ element }) {
   const { roleC } = useContext(UserContext);
@@ -44,6 +46,8 @@ function AdminRoutes() {
         <Route path='/crear-curso' element={<EnglishCourseForm />}/>
         <Route path='/recursos-curso' element={<CourseList />}/>
         <Route path='/edit-course/:courseId' element={<EditCourse />}/>
+        <Route path="/recursos-curso/groups/:groupId/tasks" element={<GroupTasksBoard />} />
+        <Route path="/recursos-curso/groups/:groupId/tasks/:taskId" element={<TaskDetails />} />
       </Routes>
     </div>
   );

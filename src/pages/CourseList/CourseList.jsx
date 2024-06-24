@@ -5,6 +5,7 @@ import { firestore, storage } from '../../connection/firebaseConfig';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Container, Box, Button, Modal, TextField, Typography } from '@mui/material';
 import { Edit, Delete } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
+import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 
 const CourseList = () => {
   const [courses, setCourses] = useState([]);
@@ -189,6 +190,9 @@ const CourseList = () => {
                       </IconButton>
                       <IconButton color="secondary" onClick={() => handleDelete(group.id)}>
                         <Delete />
+                      </IconButton>
+                      <IconButton color="default" onClick={() => navigate(`groups/${group.id}/tasks`)}>
+                        <AssignmentIndIcon />
                       </IconButton>
                     </TableCell>
                   </TableRow>
