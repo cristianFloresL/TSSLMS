@@ -90,7 +90,7 @@ ul li {
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 550px) {
   .chart-container,
   .code-section button,
   .inputs-container,
@@ -103,8 +103,15 @@ ul li {
   .inputs-container input {
     font-size: 0.9rem;
   }
+  .lcg-container {
+    max-width: 100vw;
+  }
 
   .equation p {
     font-size: 1rem;
+  }
+  .left-container,
+  .right-container {
+    min-width: 250px;
   }
 }

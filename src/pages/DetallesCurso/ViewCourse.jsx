@@ -290,7 +290,7 @@ const ViewCourse = () => {
         <button
           className='botonrepon'
           onClick={toggleSidebar}
-          style={{left: sidebarOpen ? '51.5vw' : '25px'}}
+          style={{left: sidebarOpen ? '248px' : '25px'}}
         >
           {sidebarOpen ? <CloseIcon /> : <MenuIcon />}
         </button>
