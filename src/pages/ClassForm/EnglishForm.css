@@ -26,6 +26,20 @@
     background-image: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/1462889/pat.svg');
     border-radius: 8px;
   }
+  .botonrepon {
+    padding: 5px 6px;
+    position: absolute;
+    color: white;
+    background-color: #2f6fe6;
+    border-radius: 1.2rem;
+    cursor: pointer;
+    border: none;
+    margin-top: 25px;
+    line-height: 1px;
+  }
+  .botonrepon:hover {
+    background-color: #214ea0;
+  }
   @media (max-width: 1868px) {
     .list-container {
       padding-left: 230px;

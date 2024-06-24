@@ -77,7 +77,7 @@ const SubscribedCourses = () => {
   }, [currentUser]);
 
   const handleCardClick = (groupId) => {
-    navigate(`/User/viewcourse/PmsGWJ2NCt9yb8OenzBu`);
+    navigate(`/User/viewcourse/${groupId}`);
   };
 
   return (
@@ -107,7 +107,7 @@ const SubscribedCourses = () => {
                         {group.groupName}
                       </Typography>
                     </CardContent>
-                    <GroupBadge>
+                    <GroupBadge style={{ backgroundColor: '#1e293b' }}>
                       {group.groupCode}
                     </GroupBadge>
                   </StyledCard>

@@ -335,6 +335,21 @@ h6 span {
   border-radius: 8px;
 }
 
+.toggle-password {
+  position: absolute;
+  top: 50%;
+  height: 50px;
+  font-size: 24px;
+  line-height: 46px;
+  text-align: right;
+  color: #a0aec0; /* Color del ícono de alternar contraseña */
+  background: transparent;
+  border: none;
+  right: 45px; 
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
 @media (max-width: 768px) {
   .password-reset-container {
     padding: 0; 
@@ -346,9 +361,23 @@ h6 span {
     left: 45px;
   }
 }
-@media (max-width: 468px) {
+@media (max-width: 520px) {
   .input-icons {
-    left: 25px;
+    left: 30px;
+  }
+  .card-3d-wrap {
+    width: 390px;
+    max-width: 100%;
+  }
+  .form-style{
+    padding-left: 65px;
+    padding-right: 45px;
+  }
+  .toggle-password {
+    right: 25px; 
+  }
+  .contenidolog{
+    overflow: hidden;
   }
 }
 
@@ -382,19 +411,4 @@ h6 span {
 }
 .password-reset-modal-btn:hover {
   background-color: #031c66; 
-}
-
-.toggle-password {
-  position: absolute;
-  top: 50%;
-  height: 50px;
-  font-size: 24px;
-  line-height: 46px;
-  text-align: right;
-  color: #a0aec0; /* Color del ícono de alternar contraseña */
-  background: transparent;
-  border: none;
-  right: 45px; 
-  transform: translateY(-50%);
-  cursor: pointer;
 }

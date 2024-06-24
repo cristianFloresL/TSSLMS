@@ -109,6 +109,7 @@ const CourseDetail = () => {
           color="primary"
           variant="outlined"
           sx={{ marginLeft: '1rem', marginBottom: '1.5rem' }}
+          style={{ color: '#1e293b', borderColor: '#1e293b' }}
         />
       </Box>
       <Box 

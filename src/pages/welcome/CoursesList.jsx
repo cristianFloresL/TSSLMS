@@ -83,7 +83,7 @@ const CoursesList = () => {
                     {group.groupName}
                   </Typography>
                 </CardContent>
-                <GroupBadge>
+                <GroupBadge style={{ backgroundColor: '#1e293b' }}>
                   {group.groupCode}
                 </GroupBadge>
               </StyledCard>

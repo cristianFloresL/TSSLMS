@@ -13,7 +13,8 @@ import {
   ListItemIcon,
   Divider,
   Collapse,
-  CircularProgress
+  CircularProgress,
+  IconButton
 } from '@mui/material';
 import ReactPlayer from 'react-player';
 import { Worker } from '@react-pdf-viewer/core';
@@ -23,6 +24,8 @@ import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import VideoLibraryIcon from '@mui/icons-material/VideoLibrary';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import MenuIcon from '@mui/icons-material/Menu';
+import CloseIcon from '@mui/icons-material/Close';
 
 const ViewCourse = () => {
   const { courseId } = useParams();
@@ -31,11 +34,27 @@ const ViewCourse = () => {
   const [selectedResource, setSelectedResource] = useState(null);
   const [openThemes, setOpenThemes] = useState([false, false, false, false, false]); // Ocultar los temas por defecto
   const [loading, setLoading] = useState(true); // Estado de carga
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const defaultLayoutPluginInstance = defaultLayoutPlugin();
+  const [isVisible, setIsVisible] = useState(false);
+  const [scrollTop, setScrollTop] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollTop(window.scrollY);
+      setSidebarOpen(false);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   useEffect(() => {
     const fetchCourse = async () => {
-      const courseRef = doc(firestore, 'clases', courseId);
+      const courseRef = doc(firestore, 'groups', courseId);
       const courseSnapshot = await getDoc(courseRef);
 
       if (courseSnapshot.exists()) {
@@ -46,9 +65,10 @@ const ViewCourse = () => {
     };
 
     const fetchThemes = async () => {
+      const simulr = "PmsGWJ2NCt9yb8OenzBu";
       const updatedThemes = [];
       for (let i = 0; i < 5; i++) {
-        const themeRef = collection(firestore, `clases/${courseId}/tema${i + 1}`);
+        const themeRef = collection(firestore, `clases/${simulr}/tema${i + 1}`);
         const themeSnapshot = await getDocs(themeRef);
         const themeData = [];
 
@@ -68,6 +88,21 @@ const ViewCourse = () => {
     fetchThemes();
   }, [courseId]);
 
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 550) {
+        setSidebarOpen(false);
+        setIsVisible(true);
+      } else {
+        setSidebarOpen(true);
+        setIsVisible(false);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    handleResize();
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);  
+
   const handleThemeClick = (index) => {
     const updatedOpenThemes = [...openThemes];
     updatedOpenThemes[index] = !updatedOpenThemes[index];
@@ -76,6 +111,10 @@ const ViewCourse = () => {
 
   const handleResourceClick = (resource) => {
     setSelectedResource(resource);
+  };
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
   };
 
   return (
@@ -89,9 +128,12 @@ const ViewCourse = () => {
             width: 240,
             boxSizing: 'border-box',
             height: 'calc(100vh - 100px)',
-            position: 'relative',
-            zIndex: '2',
+            position: "relative",
+            zIndex: '222',
+            display: { xs: sidebarOpen ? 'block' : 'none', sm: 'block' },
           },
+          position: { xs: isVisible ? 'fixed' : '' },
+          zIndex: '222',
         }}
       >
         <List>
@@ -170,7 +212,7 @@ const ViewCourse = () => {
                     left: '10px',
                   }}
                 >
-                  {course.courseName}
+                  {course.groupName}
                 </Typography>
               </Box>
             )}
@@ -196,6 +238,15 @@ const ViewCourse = () => {
           )}
         </Grid>
       </Box>
+      {isVisible && (
+        <button
+          className='botonrepon'
+          onClick={toggleSidebar}
+          style={{left: sidebarOpen ? '51.5vw' : '25px'}}
+        >
+          {sidebarOpen ? <CloseIcon /> : <MenuIcon />}
+        </button>
+      )}
     </Box>
   );
 };
