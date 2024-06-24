@@ -376,7 +376,7 @@
     }
     .nav__items_mobile {
       margin-top: 95px;
-      margin-left: -15px;
+      margin-left: 15px;
     }
     .label {
       display: inline;

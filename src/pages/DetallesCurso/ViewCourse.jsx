@@ -16,6 +16,7 @@ import {
   CircularProgress,
   IconButton
 } from '@mui/material';
+import { FaChartBar } from 'react-icons/fa';
 import ReactPlayer from 'react-player';
 import { Worker } from '@react-pdf-viewer/core';
 import { Viewer } from '@react-pdf-viewer/core';
@@ -26,6 +27,11 @@ import VideoLibraryIcon from '@mui/icons-material/VideoLibrary';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
+import LCGMomponent from '../Generadores/GeneradorCM';
+import LCGComponent from '../Generadores/GeneradorCL';
+import CompositionSamplingComponent from '../Generadores/GeneradorComposicion';
+import RejectionSamplingComponent from '../Generadores/GeneradorRechazo';
+import InverseTransformComponent from '../Generadores/GeneradorTransInversa';
 
 const ViewCourse = () => {
   const { courseId } = useParams();
@@ -104,8 +110,7 @@ const ViewCourse = () => {
   }, []);  
 
   const handleThemeClick = (index) => {
-    const updatedOpenThemes = [...openThemes];
-    updatedOpenThemes[index] = !updatedOpenThemes[index];
+    const updatedOpenThemes = openThemes.map((open, i) => i === index ? !open : false);
     setOpenThemes(updatedOpenThemes);
   };
 
@@ -157,28 +162,68 @@ const ViewCourse = () => {
                       <ListItemText primary="No hay recursos en este tema" />
                     </ListItem>
                   ) : (
-                    theme.resources.map((resource) => (
-                      <ListItem
-                        button
-                        key={resource.id}
-                        onClick={() => handleResourceClick(resource)}
-                        selected={selectedResource?.id === resource.id}
-                      >
-                        <ListItemIcon
-                          sx={{
-                            color: resource.type === 'video' ? '#4B0082' : 'red', // Morado más azulado y oscuro para video
-                            fontSize: resource.type === 'module' ? '1.3rem' : 'inherit' // Tamaño normal para íconos de recursos
-                          }}
+                    <>
+                      {theme.resources.map((resource) => (
+                        <ListItem
+                          button
+                          key={resource.id}
+                          onClick={() => handleResourceClick(resource)}
+                          selected={selectedResource?.id === resource.id}
                         >
-                          {resource.type === 'video' ? (
-                            <VideoLibraryIcon />
-                          ) : (
-                            <PictureAsPdfIcon />
-                          )}
-                        </ListItemIcon>
-                        <ListItemText primary={resource.title} />
-                      </ListItem>
-                    ))
+                          <ListItemIcon
+                            sx={{
+                              color: resource.type === 'video' ? '#4B0082' : 'red',
+                              fontSize: resource.type === 'module' ? '1.3rem' : 'inherit'
+                            }}
+                          >
+                            {resource.type === 'video' ? (
+                              <VideoLibraryIcon />
+                            ) : (
+                              <PictureAsPdfIcon />
+                            )}
+                          </ListItemIcon>
+                          <ListItemText primary={resource.title} />
+                        </ListItem>
+                      ))}
+                      {index === 1 && (
+                        <>
+                          <ListItem button onClick={() => handleResourceClick({ id: 'comp1', type: 'component', title: 'Generador Congruencial Lineal' })}>
+                            <ListItemIcon>
+                              <FaChartBar style={{ color: 'green', fontSize: '21px' }} />
+                            </ListItemIcon>
+                            <ListItemText primary="Generador Congruencial Lineal" />
+                          </ListItem>
+                          <ListItem button onClick={() => handleResourceClick({ id: 'comp2', type: 'component', title: 'Generador Congruencial Multiplicativo' })}>
+                            <ListItemIcon>
+                              <FaChartBar style={{ color: 'green', fontSize: '21px' }} />
+                            </ListItemIcon>
+                            <ListItemText primary="Generador Congruencial Multiplicativo" />
+                          </ListItem>
+                        </>
+                      )}
+                      {index === 3 && (
+                        <>
+                          <ListItem button onClick={() => handleResourceClick({ id: 'comp3', type: 'component', title: 'Transformada Inversa' })}>
+                            <ListItemIcon>
+                              <FaChartBar style={{ color: 'green', fontSize: '21px' }} />
+                            </ListItemIcon>
+                            <ListItemText primary="Transformada Inversa" />
+                          </ListItem>
+                          <ListItem button onClick={() => handleResourceClick({ id: 'comp4', type: 'component', title: 'Método del Rechazo' })}>
+                            <ListItemIcon>
+                              <FaChartBar style={{ color: 'green', fontSize: '21px' }} />
+                            </ListItemIcon>
+                            <ListItemText primary="Método del Rechazo" />
+                          </ListItem>
+                          <ListItem button onClick={() => handleResourceClick({ id: 'comp5', type: 'component', title: 'Método de Composición' })}>
+                            <ListItemIcon>
+                              <FaChartBar style={{ color: 'green', fontSize: '21px' }} />
+                            </ListItemIcon>
+                            <ListItemText primary="Método de Composición" />
+                          </ListItem>
+                        </>
+                      )}
+                    </>
                   )}
                 </Collapse>
               </div>
@@ -222,12 +267,15 @@ const ViewCourse = () => {
               <Typography variant="h5">{selectedResource.title}</Typography>
               {selectedResource.type === 'video' ? (
                 <ReactPlayer url={selectedResource.url} controls width="100%" />
+              ) : selectedResource.type === 'component' ? (
+                selectedResource.id === 'comp1' ? <LCGComponent  /> :
+                selectedResource.id === 'comp2' ? <LCGMomponent /> :
+                selectedResource.id === 'comp3' ? <InverseTransformComponent/> :
+                selectedResource.id === 'comp4' ? <RejectionSamplingComponent /> :
+                selectedResource.id === 'comp5' ? <CompositionSamplingComponent /> :
+                null
               ) : (
-                <Box
-                  sx={{
-                    height: '70vh',
-                  }}
-                >
+                <Box sx={{ height: '70vh' }}>
                   <Typography variant="body1">{selectedResource.description}</Typography>
                   <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
                     <Viewer fileUrl={selectedResource.url} plugins={[defaultLayoutPluginInstance]} />
