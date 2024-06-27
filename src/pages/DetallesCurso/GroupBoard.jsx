@@ -59,7 +59,7 @@ const GroupBoard = () => {
       const listRef = ref(storage, `groups/${groupId}/tasks/${task.id}/${currentUser.uid}`);
       
       const res = await listAll(listRef);
-      console.log(res.items[0]._location.path_);
+      console.log(res);
       if (res.items.length > 0) {
         // Files exist
         setborra(res.items[0]._location.path_);

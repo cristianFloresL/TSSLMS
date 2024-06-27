@@ -50,6 +50,7 @@ const GroupTasksBoard = () => {
   };
 
   return (
+    <div className='list-container'>
     <Container>
       <Box sx={{ borderRadius: 2, boxShadow: 3, padding: 3, backgroundColor: 'white', marginTop: '100px', marginBottom: '100px' }}>
         <Typography variant="h4" gutterBottom>
@@ -143,6 +144,7 @@ const GroupTasksBoard = () => {
         </Box>
       </Modal>
     </Container>
+    </div>
   );
 };
 
