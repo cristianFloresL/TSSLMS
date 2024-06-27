@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { collection, getDocs, addDoc, deleteDoc, doc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
+import { ref, uploadBytes, getDownloadURL, deleteObject, listAll } from 'firebase/storage';
 import { firestore, storage } from '../../connection/firebaseConfig';
 import { UserContext } from '../../context/UserContext';
 import { SearchContext } from '../../context/SearchContext';
@@ -16,7 +16,6 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  TextField,
   Typography,
   Paper,
   CircularProgress
@@ -43,7 +42,7 @@ const GroupBoard = () => {
   const [message, setMessage] = useState('');
   const defaultLayoutPluginInstance = defaultLayoutPlugin();
   const groupId = groupC;
-
+  const [borra, setborra] = useState("")
   useEffect(() => {
     const fetchBoardItems = async () => {
       const boardCollection = collection(firestore, 'groups', groupId, 'tasks');
@@ -55,13 +54,37 @@ const GroupBoard = () => {
     fetchBoardItems();
   }, [groupId]);
 
+  const checkFilesExist = async (task) => {
+    try {
+      const listRef = ref(storage, `groups/${groupId}/tasks/${task.id}/${currentUser.uid}`);
+      
+      const res = await listAll(listRef);
+      console.log(res);
+      if (res.items.length > 0) {
+        // Files exist
+        setborra(res.items[0]._location.path_);
+        setFileUrl(await getDownloadURL(res.items[0])); // Assuming you want to get the URL of the first file
+        setMessage('File exists');
+
+      } else {
+        // No files found
+        setMessage('No files found');
+      }
+    } catch (error) {
+      console.error('Error checking files:', error);
+      //setMessage('Error checking files');
+    }
+  };
+
   const handleFileUpload = async (e) => {
     const file = e.target.files[0];
     setFile(file);
     if (file) {
       setLoading(true);
       const fileRef = ref(storage, `groups/${groupId}/tasks/${selectedTask.id}/${currentUser.uid}/${file.name}`);
+
       await uploadBytes(fileRef, file);
+      console.log(fileRef);
       const url = await getDownloadURL(fileRef);
       setFileUrl(url);
       setLoading(false);
@@ -95,44 +118,63 @@ const GroupBoard = () => {
   };
 
   const handleDeleteFile = async () => {
-    if (!file) {
-      setMessage('Error: No file selected');
+    if (!fileUrl) {
+      setMessage('Error: No file URL found');
       return;
     }
-
+  
     setLoading(true);
-    const fileRef = ref(storage, `groups/${groupId}/tasks/${selectedTask.id}/${currentUser.uid}/${file.name}`);
-    await deleteObject(fileRef);
-
-    const taskDocRef = doc(firestore, 'groups', groupId, 'tasks', selectedTask.id);
-    await updateDoc(taskDocRef, {
-      submissions: arrayRemove({
-        userId: currentUser.uid,
-        fileUrl: fileUrl,
-        grade: 'none'
-      })
-    });
-
-    setFileUrl('');
-    setFile(null);
-    setLoading(false);
-    setMessage('File deleted successfully');
-    // Refetch board items
-    const boardSnapshot = await getDocs(collection(firestore, 'groups', groupId, 'tasks'));
-    const boardData = boardSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    setBoardItems(boardData);
+    try {
+      let fileRef;
+      if (borra === "") {
+        fileRef = ref(storage, `groups/${groupId}/tasks/${selectedTask.id}/${currentUser.uid}/${file.name}`);
+      } else {
+        fileRef = ref(storage, borra);
+      }
+  
+      console.log("Deleting file:", fileRef);
+      await deleteObject(fileRef);
+  
+      const taskDocRef = doc(firestore, 'groups', groupId, 'tasks', selectedTask.id);
+      await updateDoc(taskDocRef, {
+        submissions: arrayRemove({
+          userId: currentUser.uid,
+          fileUrl: fileUrl,
+          grade: 'none'
+        })
+      });
+  
+      setFileUrl('');
+      setFile(null);
+      setLoading(false);
+      setMessage('File deleted successfully');
+  
+      // Refetch board items
+      const boardSnapshot = await getDocs(collection(firestore, 'groups', groupId, 'tasks'));
+      const boardData = boardSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setBoardItems(boardData);
+  
+      //setOpenFileModal(false); // Cerrar el modal después de eliminar el archivo
+    } catch (error) {
+      console.error('Error deleting file:', error);
+      setMessage('Error deleting file');
+      setLoading(false);
+    }
   };
+  
 
-  const handleOpenFileModal = (task) => {
+  const handleOpenFileModal = async (task) => {
+    setMessage("");
     setSelectedTask(task);
     setOpenFileModal(true);
+    await checkFilesExist(task); // Pasar task directamente
   };
 
   const handleOpenTaskModal = (task) => {
     setSelectedTask(task);
     setOpenTaskModal(true);
   };
-
+  
   return (
     <Container>
       <Box>

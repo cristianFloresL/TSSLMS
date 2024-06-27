@@ -19,7 +19,7 @@ let app;
 if (!getApps().length) {
   app = initializeApp(firebaseConfig);
 } else {
-  app = getApp(); // if already initialized, use that one
+  app = getApp(); // si ya está inicializado, usa esa instancia
 }
 
 // Exporta las instancias de Firebase que necesites
