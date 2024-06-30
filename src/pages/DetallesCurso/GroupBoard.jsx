@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { collection, getDocs, addDoc, deleteDoc, doc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL, deleteObject, listAll } from 'firebase/storage';
+import { collection, getDocs, getDoc, setDoc, deleteDoc, doc } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 import { firestore, storage } from '../../connection/firebaseConfig';
 import { UserContext } from '../../context/UserContext';
 import { SearchContext } from '../../context/SearchContext';
@@ -18,7 +18,8 @@ import {
   TableRow,
   Typography,
   Paper,
-  CircularProgress
+  CircularProgress,
+  Snackbar
 } from '@mui/material';
 import { Delete, CloudUpload } from '@mui/icons-material';
 import { Worker, Viewer } from '@react-pdf-viewer/core';
@@ -29,12 +30,10 @@ const GroupBoard = () => {
   const { groupC } = useContext(SearchContext);
   const { currentUser } = useContext(UserContext);
   const [boardItems, setBoardItems] = useState([]);
-  const [openModal, setOpenModal] = useState(false);
-  const [newItemTitle, setNewItemTitle] = useState('');
-  const [newItemContent, setNewItemContent] = useState('');
-  const [newItemType, setNewItemType] = useState('announcement'); // default type
   const [file, setFile] = useState(null);
   const [fileUrl, setFileUrl] = useState('');
+  const [fileName, setFileName] = useState('');
+  const [grade, setGrade] = useState('none');
   const [openFileModal, setOpenFileModal] = useState(false);
   const [openTaskModal, setOpenTaskModal] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
@@ -42,7 +41,8 @@ const GroupBoard = () => {
   const [message, setMessage] = useState('');
   const defaultLayoutPluginInstance = defaultLayoutPlugin();
   const groupId = groupC;
-  const [borra, setborra] = useState("")
+  const [open, setOpen] = useState(false);
+
   useEffect(() => {
     const fetchBoardItems = async () => {
       const boardCollection = collection(firestore, 'groups', groupId, 'tasks');
@@ -56,62 +56,73 @@ const GroupBoard = () => {
 
   const checkFilesExist = async (task) => {
     try {
-      const listRef = ref(storage, `groups/${groupId}/tasks/${task.id}/${currentUser.uid}`);
-      
-      const res = await listAll(listRef);
-      console.log(res);
-      if (res.items.length > 0) {
-        // Files exist
-        setborra(res.items[0]._location.path_);
-        setFileUrl(await getDownloadURL(res.items[0])); // Assuming you want to get the URL of the first file
-        setMessage('File exists');
-
+      setLoading(true);
+      const submissionDocRef = doc(firestore, 'groups', groupId, 'tasks', task.id, 'submissions', currentUser.uid);
+      const submissionDoc = await getDoc(submissionDocRef);
+      if (submissionDoc.exists()) {
+        const data = submissionDoc.data();
+        setFileUrl(data.fileUrl);
+        setFileName(data.fileName);
+        setGrade(data.grade);
+        setMessage('Archivo existente');
       } else {
-        // No files found
-        setMessage('No files found');
+        setFileUrl('');
+        setFileName('');
+        setGrade('none');
+        setMessage('No se encontraron archivos');
       }
     } catch (error) {
-      console.error('Error checking files:', error);
-      //setMessage('Error checking files');
+      console.error('Error al verificar archivos:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleFileUpload = async (e) => {
     const file = e.target.files[0];
-    setFile(file);
-    if (file) {
+    if (file && file.type === 'application/pdf') {
+      setFile(file);
       setLoading(true);
-      const fileRef = ref(storage, `groups/${groupId}/tasks/${selectedTask.id}/${currentUser.uid}/${file.name}`);
+      
+      try {
+        const submissionDocRef = doc(firestore, 'groups', groupId, 'tasks', selectedTask.id, 'submissions', currentUser.uid);
+        await setDoc(submissionDocRef, {
+          userId: currentUser.uid,
+          fileUrl: '',
+          fileName: file.name,
+          grade: 'none',
+          timestamp: new Date()
+        });
 
-      await uploadBytes(fileRef, file);
-      console.log(fileRef);
-      const url = await getDownloadURL(fileRef);
-      setFileUrl(url);
-      setLoading(false);
+        const fileRef = ref(storage, `groups/${groupId}/tasks/${selectedTask.id}/${currentUser.uid}/${file.name}`);
+        await uploadBytes(fileRef, file);
+
+        const url = await getDownloadURL(fileRef);
+        setFileUrl(url);
+
+        await setDoc(submissionDocRef, { fileUrl: url }, { merge: true });
+
+        setMessage('Archivo subido exitosamente');
+      } catch (error) {
+        console.error('Error al subir el archivo:', error);
+        setMessage('Error al subir el archivo');
+      } finally {
+        setLoading(false);
+      }
     } else {
-      setMessage('Error: No file selected');
+      setMessage('Error: Solo se pueden subir archivos PDF');
     }
   };
 
   const handleFileSubmit = async () => {
     if (!fileUrl) {
-      setMessage('Error: File URL not available');
+      setMessage('Error: URL del archivo no disponible');
       return;
     }
 
-    const taskDocRef = doc(firestore, 'groups', groupId, 'tasks', selectedTask.id);
-    await updateDoc(taskDocRef, {
-      submissions: arrayUnion({
-        userId: currentUser.uid,
-        fileUrl: fileUrl,
-        grade: 'none'
-      })
-    });
     setOpenFileModal(false);
     setFile(null);
     setFileUrl('');
-    setMessage('File uploaded successfully');
-    // Refetch board items
     const boardSnapshot = await getDocs(collection(firestore, 'groups', groupId, 'tasks'));
     const boardData = boardSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     setBoardItems(boardData);
@@ -119,62 +130,54 @@ const GroupBoard = () => {
 
   const handleDeleteFile = async () => {
     if (!fileUrl) {
-      setMessage('Error: No file URL found');
+      setMessage('Error: No se encontró la URL del archivo');
       return;
     }
-  
+
     setLoading(true);
     try {
-      let fileRef;
-      if (borra === "") {
-        fileRef = ref(storage, `groups/${groupId}/tasks/${selectedTask.id}/${currentUser.uid}/${file.name}`);
-      } else {
-        fileRef = ref(storage, borra);
-      }
-  
-      console.log("Deleting file:", fileRef);
+      const fileRef = ref(storage, `groups/${groupId}/tasks/${selectedTask.id}/${currentUser.uid}/${fileName}`);
       await deleteObject(fileRef);
-  
-      const taskDocRef = doc(firestore, 'groups', groupId, 'tasks', selectedTask.id);
-      await updateDoc(taskDocRef, {
-        submissions: arrayRemove({
-          userId: currentUser.uid,
-          fileUrl: fileUrl,
-          grade: 'none'
-        })
-      });
-  
+
+      const submissionDocRef = doc(firestore, 'groups', groupId, 'tasks', selectedTask.id, 'submissions', currentUser.uid);
+      await deleteDoc(submissionDocRef);
+
       setFileUrl('');
       setFile(null);
-      setLoading(false);
-      setMessage('File deleted successfully');
-  
-      // Refetch board items
+      setFileName('');
+      setMessage('Archivo eliminado exitosamente');
+
       const boardSnapshot = await getDocs(collection(firestore, 'groups', groupId, 'tasks'));
       const boardData = boardSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       setBoardItems(boardData);
-  
-      //setOpenFileModal(false); // Cerrar el modal después de eliminar el archivo
     } catch (error) {
-      console.error('Error deleting file:', error);
-      setMessage('Error deleting file');
+      console.error('Error al eliminar archivo:', error);
+      setMessage('Error al eliminar archivo');
+    } finally {
       setLoading(false);
     }
   };
-  
 
   const handleOpenFileModal = async (task) => {
     setMessage("");
     setSelectedTask(task);
     setOpenFileModal(true);
-    await checkFilesExist(task); // Pasar task directamente
+    await checkFilesExist(task);
   };
 
   const handleOpenTaskModal = (task) => {
     setSelectedTask(task);
     setOpenTaskModal(true);
   };
-  
+
+  const handleButtonClick = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   return (
     <Container>
       <Box>
@@ -216,8 +219,8 @@ const GroupBoard = () => {
           top: '50%',
           left: '50%',
           transform: 'translate(-50%, -50%)',
-          width: '80%', // Ajustar el tamaño del modal
-          height: '80%', // Ajustar el tamaño del modal
+          width: '80%',
+          height: '80%',
           bgcolor: 'background.paper',
           borderRadius: 2,
           boxShadow: 24,
@@ -236,7 +239,14 @@ const GroupBoard = () => {
                   <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
                     <Viewer fileUrl={fileUrl} plugins={[defaultLayoutPluginInstance]} />
                   </Worker>
-                  <Button variant="contained" color="secondary" onClick={handleDeleteFile}>Eliminar</Button>
+                  <div style={{marginTop:'25px'}}></div>
+                  {grade === 'none' ? (
+                    <Button variant="contained" color="secondary" onClick={handleDeleteFile}>Eliminar</Button>
+                  ) : (
+                    <Button variant="contained" color="success" sx={{cursor: 'default'}} onClick={handleButtonClick}>
+                      Calificado: {grade}
+                    </Button>
+                  )}
                 </Box>
               ) : (
                 <Box>
@@ -262,8 +272,8 @@ const GroupBoard = () => {
           minWidth: '50%',
           minHeight: '30%',
           transform: 'translate(-50%, -50%)',
-          maxWidth: '80%', // Ajustar el tamaño del modal
-          maxHeight: '70%', // Ajustar el tamaño del modal
+          maxWidth: '80%',
+          maxHeight: '70%',
           bgcolor: 'background.paper',
           borderRadius: 2,
           boxShadow: 24,
@@ -280,6 +290,12 @@ const GroupBoard = () => {
           )}
         </Box>
       </Modal>
+      <Snackbar
+        open={open}
+        autoHideDuration={1000}
+        onClose={handleClose}
+        message="Una tarea calificada no se puede eliminar."
+      />
     </Container>
   );
 };
